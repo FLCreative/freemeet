@@ -1,0 +1,85 @@
+<?php echo $this->doctype(); ?>
+
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <?php echo $this->headTitle('FREEMEET '. $this->translate('Skeleton Application'))->setSeparator(' - ')->setAutoEscape(false) ?>
+
+        <?php echo $this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1.0') ?>
+
+        <!-- Le styles -->
+        <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
+                        ->prependStylesheet($this->basePath() . '/css/style.css')                        
+        				->prependStylesheet($this->basePath() . '/css/flexslider.css') 
+                        ->prependStylesheet($this->basePath() . '/css/bootstrap-theme.min.css')
+                        ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css') ?>
+
+        <!-- Scripts -->
+        <?php echo $this->headScript()->prependFile($this->basePath() . '/js/html5.js', 'text/javascript', array('conditional' => 'lt IE 9',))
+                                      ->prependFile($this->basePath() . '/js/application.js')
+                                      ->prependFile($this->basePath() . '/js/jquery.flexslider-min.js')
+                                      ->prependFile($this->basePath() . '/js/bootstrap.min.js')
+                                      ->prependFile($this->basePath() . '/js/jquery.min.js') ?>
+
+    </head>
+    <body>
+        <header>
+     <div class="container">
+		<div class="row">
+			<div class="col-sm-6"><h3 style="font-size: 55px; margin-top: 20px; margin-bottom: 20px;"><img src="/images/logo.png"></h3></div>
+			<div class="col-sm-6">
+			<form class="form-inline" role="form" method="POST" action="/login" style="margin-top:40px">
+
+  <div class="form-group">
+    <div class="input-group">
+      <input class="form-control" type="email" name="email" placeholder="Adresse email">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="sr-only" for="exampleInputPassword2">Mot de passe</label>
+    <input type="password" class="form-control" id="exampleInputPassword2" name="password" placeholder="Mot de passe">
+  </div>
+  <button type="submit" class="btn btn-primary">Connexion</button>
+</form>
+<p style="font-size: 12px"><a href="">Mot de passe perdu</a> | <a href="#" data-toggle="modal" data-target="#myModal">Inscription</a></p>
+			</div>
+			
+		</div>
+     </div>
+</header>
+            <?php echo $this->content; ?>
+            <div class="container">
+            <hr>
+            <footer>
+                <div class="row">
+                <div class="col-sm-6">
+                <p>&copy; 2009 - <?php echo date('Y') ?> Freemeet.net <?php echo $this->translate('All rights reserved.') ?></p>
+            	</div>
+            	<div class="col-sm-6 text-right">
+            	<p><a href="http://blog.freemeet.net" target="_blank">Blog</a> | <a href="/contact">Contactez-nous</a> | <a href="">Mentions légales</a></p>
+            	</div>
+            	</div>
+            </footer>
+        </div> <!-- /container -->
+        <?php echo $this->inlineScript() ?>
+        <!-- Modal -->
+        <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Inscription réussie !</h4>
+              </div>
+              <div class="modal-body">
+              Un email de confirmation vient de vous êtres envoyé, cliquez sur le lien dans l'email pour activer votre compte.
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+    </body>
+</html>

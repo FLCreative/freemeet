@@ -1,0 +1,199 @@
+
+
+
+    <div class="col-sm-12 col-md-12 col-lg-10">
+    
+                    <div class="panel hidden-lg">
+                    <div class="panel-body">
+                        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                        <!-- freemeet_adaptable -->
+                        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2896902524200753" data-ad-slot="8950765023" data-ad-format="auto"></ins>
+                        <script>
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
+                    </div>
+                </div>
+    
+        <div class="panel">
+
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-4 col-md-3 hidden-xs">
+                        <?php if(count($photos)): ?>
+                        <div id="slider" class="flexslider">
+                            <ul class="slides">
+                                <?php foreach ($photos as $photo):?>
+                                <li>
+                                    <img class="img-thumbnail img-responsive" src="/photos/<?php echo $photo->getFilename() ?>" />
+                                </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                        <br>
+                        <?php else: ?>
+                        <p><img class="img-responsive" src="<?php echo $user->getPhoto() ?>" /></p>
+                        <?php endif; ?>
+
+                    </div>
+                    <div class="col-sm-8 col-md-9">
+                        <h3 class="text-uppercase" style="margin-top:0">
+                  <span class="hidden-xs">
+                  <?php if(!$favorite):?>
+                  <a href="<?php echo $this->url('user/favorite') ?>" class="btn btn-xs btn-primary pull-right" data-id="<?php echo $user->getId() ?>" id="add_favorite"><span class="glyphicon glyphicon-star"></span> Ajouter au favoris</a>
+                  <?php else: ?>
+                  <a href="#" class="btn btn-xs btn-info pull-right" data-id="<?php echo $user->getId() ?>"><span class="glyphicon glyphicon-star"></span> Favoris</a>
+                  <?php endif ?>
+                  </span>
+                  <b><?php echo $user->getName() ?></b> - <?php echo $this->BirthdayToAge($user->getBirthday())?> ans                 
+                  </h3>
+
+
+
+                        <ul class="list-unstyled">
+                            <li>J'habite
+                                <?php echo $user->getCityName() ?>,
+                                <?php echo $user->getDepartmentName() ?>,
+                                <?php echo $user->getCountryName() ?></li>
+                            <li>Je recherche</li>
+                            <li>Mon signe astrologique est
+                                <?php echo $this->astrologicalsign($user->getBirthday()) ?></li>
+                        </ul>
+
+
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-sm-4 col-md-3">
+                        <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                            <div class="btn-group" role="group">
+                                <a href="<?php echo $this->url('mailbox/compose',['user'=> $user->getId()]) ?>" class="btn btn-primary"><span class="glyphicon glyphicon-envelope"></span> Écrire</a>
+                            </div>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-primary" id="send_flash" data-id="<?php echo $user->getId() ?>"><span class="glyphicon glyphicon-flash"></span> Flash</button>
+                            </div>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-success"><span class="glyphicon glyphicon-flash"></span> Chat</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-8 col-md-9">
+
+                        <p class="text-right">Dernière connexion il y a
+                            <?php echo $this->relativeTime($user->getLastLogin()) ?></p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="panel">
+                    <div class="panel-body">
+                        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                        <!-- freemeet_adaptable -->
+                        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2896902524200753" data-ad-slot="8950765023" data-ad-format="auto"></ins>
+                        <script>
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-8">
+
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h3 class="panel-title text-uppercase"><span class="glyphicon glyphicon-list-alt"></span> <b>Mon profil</b></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <table class="table table-striped table-condensed">
+                                    <tr>
+                                        <td>NOn</td>
+                                        <td>NOn</td>
+                                    </tr>
+                                    <tr>
+                                        <td>NOn</td>
+                                        <td>NOn</td>
+                                    </tr>
+                                    <tr>
+                                        <td>NOn</td>
+                                        <td>NOn</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <table class="table table-striped table-condensed">
+                                    <tr>
+                                        <td>NOn</td>
+                                        <td>NOn</td>
+                                    </tr>
+                                    <tr>
+                                        <td>NOn</td>
+                                        <td>NOn</td>
+                                    </tr>
+                                    <tr>
+                                        <td>NOn</td>
+                                        <td>NOn</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h3 class="panel-title text-uppercase"><span class="glyphicon glyphicon-list-alt"></span> <b>Ma personalité</b></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <table class="table table-striped table-condensed">
+                                    <tr>
+                                        <td>NOn</td>
+                                        <td>NOn</td>
+                                    </tr>
+                                    <tr>
+                                        <td>NOn</td>
+                                        <td>NOn</td>
+                                    </tr>
+                                    <tr>
+                                        <td>NOn</td>
+                                        <td>NOn</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <table class="table table-striped table-condensed">
+                                    <tr>
+                                        <td>NOn</td>
+                                        <td>NOn</td>
+                                    </tr>
+                                    <tr>
+                                        <td>NOn</td>
+                                        <td>NOn</td>
+                                    </tr>
+                                    <tr>
+                                        <td>NOn</td>
+                                        <td>NOn</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+    <div class="col-lg-2 hidden-sm hidden-md hidden-xs">
+        <script type="text/javascript">
+            var uri = 'http://impfr.tradedoubler.com/imp?type(img)g(19820558)a(2170760)' + new String(Math.random()).substring(2, 11);
+            document.write('<a href="http://clk.tradedoubler.com/click?p=3129&a=2170760&g=19820558" target="_BLANK"><img src="' + uri + '" border=0><\/a>');
+        </script>
+    </div>

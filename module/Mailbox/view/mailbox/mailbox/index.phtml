@@ -1,0 +1,41 @@
+
+<div class="panel panel-primary">
+    
+   <div class="panel-heading">
+   <h3 class="panel-title text-uppercase"><strong><span class="glyphicon glyphicon-envelope"></span> Mes messages</strong></h3>
+   </div>
+  <div class="panel-body">
+        <?php if(count($conversations)): ?>
+
+            <?php foreach($conversations as $conversation): ?>
+            <?php if($conversation->getLastMessageStatus() == 'unread'):?>
+            <div class="row unread">
+            <?php else: ?>
+            <div class="row">
+            <?php endif ?>
+              <div class="col-xs-2">
+                <a href="#">
+                  <img alt="50x50" class="img-responsive" src="<?php echo $conversation->getPhoto('xsmall') ?>">
+                </a>
+              </div>
+              <div class="col-xs-10">
+                <a href="<?php echo $this->url('mailbox/delete',array('id'=>$conversation->getId())) ?>" class="close pull-right" data-toggle="tooltip" data-placement="top" title="Supprimer la conversation"><span aria-hidden="true">&times;</span></a>                
+                <h4 class="media-heading"><a href="<?php echo $this->url('mailbox/view',array('id'=>$conversation->getId())) ?>"><?php echo $conversation->getUsername() ?></a></h4>
+                
+                <p><?php if($this->identity()->user_id == $conversation->getLastUser()) { echo 'Vous : '; }?>
+                    <?php echo $conversation->getLastMessage() ?></p>
+              </div>
+              
+              
+
+            </div>
+            <hr>
+            <?php endforeach;?>
+
+        <?php else: ?>
+        
+            <div class="alert alert-info" style="margin-bottom:0">Vous n'avez pas encore reçu de message.</div>
+        
+        <?php endif ?>
+        </div>
+   </div>

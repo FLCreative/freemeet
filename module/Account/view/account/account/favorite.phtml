@@ -1,0 +1,31 @@
+<div class="panel panel-primary">
+   <div class="panel-heading">
+      <h3 class="panel-title"><span class="glyphicon glyphicon-star"></span> <b>Vos membres coup de coeur</b></h3>
+   </div>
+   <div class="panel-body">
+   <?php if(count($profils)): ?>
+      <div class="row">
+   <?php foreach ($profils as $user): ?>
+   
+   <div class="col-sm-3 col-md-3 col-xs-6">
+       <div class="thumbnail">      
+          <a href="<?php echo $this->url('user/view',array('id'=>$user->getId())) ?>"><img src="<?php echo $user->getPhoto() ?>" alt="..."></a>
+              <div class="fix">
+                  <div class="desc">
+                        <p class="desc_content"><small><?php echo $user->getName() ?></small></p>
+                  </div>
+              </div>
+          <div class="caption">
+            <button class="btn btn-xs btn-block btn-danger" id="delete_favorite" data-id="<?php echo $user->getId() ?>">Retirer des favoris</button>          
+          </div>
+       </div>
+       
+   </div>
+
+   <?php endforeach ?>
+   </div>
+   <?php else: ?>
+   <div class="alert alert-info" role="alert"><strong>Désolé</strong>, vous n'avez pas encore eu de coup de coeur pour un membre...</div>
+   <?php endif ?>
+   </div>
+</div>

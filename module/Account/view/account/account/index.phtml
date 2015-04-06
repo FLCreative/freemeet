@@ -1,0 +1,204 @@
+
+                <div class="panel panel-primary">
+                	
+                    <div class="panel-heading">
+                    <a href="<?php echo $this->url('search/online') ?>" class="btn btn-link pull-right">Afficher plus</a>
+                        <h3 class="panel-title text-uppercase"><span class="glyphicon glyphicon-signal"></span> Membres en ligne</h3>                    
+                    </div>
+                    <div class="panel-body">
+                        <?php if(count($onlines)):?>
+                        <div class="row">
+                            <div class="col-sm-2 col-md-2 col-xs-2">
+                                    <a href="/user/view/43261/"><img height="240px" class="img-thumbnail" id="display_photo"
+                                    name="27" src=
+                                    "http://www.freemeet.net/upload/1357993839.jpg"
+                                    width="240px"></a>
+
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-xs-2">
+                                    <img height="240px" class="img-thumbnail" id="display_photo"
+                                    name="27" src=
+                                    "http://www.freemeet.net/upload/1368196992.jpg"
+                                    width="240px">
+
+                            </div>
+
+                            <div class="col-sm-2 col-md-2 col-xs-2">
+                                    <img height="240px" class="img-thumbnail" id="display_photo"
+                                    name="27" src=
+                                    "http://www.freemeet.net/upload/1357993839.jpg"
+                                    width="240px">
+
+                            </div>
+
+                            <div class="col-sm-2 col-md-2 col-xs-2">
+                                    <img height="240px" class="img-thumbnail" id="display_photo"
+                                    name="27" src=
+                                    "http://www.freemeet.net/upload/1357669182.jpg"
+                                    width="240px">
+
+                            </div>
+
+                            <div class="col-sm-2 col-md-2 col-xs-2">
+                                    <img height="240px" class="img-thumbnail" id="display_photo"
+                                    name="27" src=
+                                    "http://www.freemeet.net/upload/1288536776.jpg"
+                                    width="240px">
+
+                            </div>
+                            
+                            <div class="col-sm-2 col-md-2 col-xs-2">
+                                    <img height="240px" class="img-thumbnail" id="display_photo"
+                                    name="27" src=
+                                    "http://www.freemeet.net/upload/1357669182.jpg"
+                                    width="240px">
+
+                            </div>
+                            
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-sm-2 col-md-2 col-xs-2">
+                                    <a href="/user/view/43261/"><img height="240px" class="img-thumbnail" id="display_photo"
+                                    name="27" src=
+                                    "http://www.freemeet.net/upload/1357993839.jpg"
+                                    width="240px"></a>
+
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-xs-2">
+                                    <img height="240px" class="img-thumbnail" id="display_photo"
+                                    name="27" src=
+                                    "http://www.freemeet.net/upload/1368196992.jpg"
+                                    width="240px">
+
+                            </div>
+
+                            <div class="col-sm-2 col-md-2 col-xs-2">
+                                    <img height="240px" class="img-thumbnail" id="display_photo"
+                                    name="27" src=
+                                    "http://www.freemeet.net/upload/1357993839.jpg"
+                                    width="240px">
+
+                            </div>
+
+                            <div class="col-sm-2 col-md-2 col-xs-2">
+                                    <img height="240px" class="img-thumbnail" id="display_photo"
+                                    name="27" src=
+                                    "http://www.freemeet.net/upload/1357669182.jpg"
+                                    width="240px">
+
+                            </div>
+
+                            <div class="col-sm-2 col-md-2 col-xs-2">
+                                    <img height="240px" class="img-thumbnail" id="display_photo"
+                                    name="27" src=
+                                    "http://www.freemeet.net/upload/1288536776.jpg"
+                                    width="240px">
+
+                            </div>
+                            
+                            <div class="col-sm-2 col-md-2 col-xs-2">
+                                    <img height="240px" class="img-thumbnail" id="display_photo"
+                                    name="27" src=
+                                    "http://www.freemeet.net/upload/1357669182.jpg"
+                                    width="240px">
+
+                            </div>
+                            
+                        </div>
+                        <?php else: ?>
+                        <div class="alert alert-info"><strong>Désolé</strong>, Aucun membre n'est actuellement en ligne</div>
+                        <?php endif ?>
+                    </div>
+                </div>
+
+                
+                <div class="panel panel-primary">
+	                <div class="panel-heading">
+	                    <a href="<?php echo $this->url('search/new') ?>" class="btn btn-primary btn-xs pull-right"><span class="glyphicon glyphicon-eye-open"></span> Voir plus</a>
+	                	<h3 class="panel-title"><span class="glyphicon glyphicon-time"></span> <b>Nouveaux</b> Membres</h3>                    
+	                </div>
+                    <div class="panel-body">
+						<?php if (count($newUsers)): ?>
+						<div class="row">
+						<?php foreach($newUsers as $user): ?>
+						<div class="col-xs-12 col-md-6">	
+						<div class="media">
+						      <a href="<?php echo $this->url('user/view',array('id'=>$user->getId())) ?>" class="media-left">
+						        <img alt="photo" class="img-thumbnail img-responsive" src="<?php echo $user->getPhoto('small') ?>"></a>
+						      <div class="media-body">						        
+						        <h4 class="media-heading"><a href="<?php echo $this->url('user/view',array('id'=>$user->getId())) ?>"><?php echo $user->getName() ?> - <?php echo $this->BirthdayToAge($user->getBirthday()) ?> ans</a></h4>						        
+						        <small>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo.</small>
+						      </div>
+					    </div>
+						</div>
+					    <?php endforeach; ?>
+					</div>
+					<?php else: ?>
+					<div class="alert alert-info">Désolé, il n'y a aucun nouveau membre</div>
+					<?php endif ?>
+                    </div>
+                </div>
+
+                
+                <div class="row">
+                <div class="col-sm-6 col-md-6">
+                <div class="panel panel-primary">
+	                <div class="panel-heading">
+	                	<h3 class="panel-title"><span class="glyphicon glyphicon-search"></span> <b>Recherche</b> rapide</h3>                    
+	                </div>
+                    <div class="panel-body">
+					<form role="form">
+					  <div class="form-group">
+					    <label for="exampleInputEmail1">Je recherche une femme entre :</label>
+					    <input id="ex2" type="text" class="span2" value="" data-slider-min="18" data-slider-max="99" data-slider-step="1" data-slider-value="[25,40]"/> <b>ans</b>
+					  </div>
+					  <div class="form-group">
+					    <label for="exampleInputPassword1">Dans un périmètre de :</label>
+					    <div class="input-group">
+                          <input id="ex6" type="text" data-slider-min="10" data-slider-max="500" data-slider-step="10" data-slider-value="50">
+                          <span id="ex6CurrentSliderValLabel"><span id="ex6SliderVal">50</span> Km</span>
+                        </div>
+					  </div>
+					  <button type="submit" class="btn btn-primary btn-block">Rechercher</button>
+					</form>
+                    </div>
+                </div>
+                </div>
+                
+                <div class="col-sm-6 col-md-6">
+                <div class="panel panel-primary">
+	                <div class="panel-heading">
+	                	<h3 class="panel-title"><span class="glyphicon glyphicon-list-alt"></span> <b>Dernières</b> Actions</h3>                    
+	                </div>
+	                <?php if(!count($actions)): ?>
+                    <div class="panel-body list">
+                        
+                        <div class="alert alert-info">Vous n'avez pas encore effectué d'action.</div>
+                        
+                    </div>
+                    <?php else: ?>                       
+                        <table class="table table-striped">
+                        	<?php foreach($actions as $action): ?>
+                        	<tr>
+                        		<?php if($action->getType() == 'view'): ?>
+                        		<td><span class="glyphicon glyphicon-eye-open"></span></td>
+                        		<td>Visite du profil de <a href="<?php echo $this->url('user/view', array('id'=>$action->getUser())) ?>"><?php echo $action->getUsername() ?></a></td>
+                        		<?php elseif($action->getType() == 'flash'): ?>
+                        		<td><span class="glyphicon glyphicon-flash"></span></td>
+                        		<td>Envois d'un flash à <a href="<?php echo $this->url('user/view', array('id'=>$action->getUser())) ?>"><?php echo $action->getUsername() ?></a></td>
+                        		<?php elseif($action->getType() == 'mail'): ?>
+                        		<td><span class="glyphicon glyphicon-envelope"></span></td>
+                        		<td>Envois d'un message à <a href="<?php echo $this->url('user/view', array('id'=>$action->getUser())) ?>"><?php echo $action->getUsername() ?></a></td>
+                        		<?php elseif($action->getType() == 'favoris'): ?>
+                        		<td><span class="glyphicon glyphicon-star"></span></td>
+                        		<td>Ajout à mes favoris du profil de <a href="<?php echo $this->url('user/view', array('id'=>$action->getUser())) ?>"><?php echo $action->getUsername() ?></a></td>
+                        		<?php endif; ?>
+                        	</tr>
+                        	<?php endforeach ?>
+                        </table>
+                    <?php endif ?>
+                </div>
+                </div>
+                
+            </div>

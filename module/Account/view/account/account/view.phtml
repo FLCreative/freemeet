@@ -1,0 +1,29 @@
+<div class="panel panel-default">
+   <div class="panel-heading">
+      <h3 class="panel-title"><span class="glyphicon glyphicon-eye-open"></span> <b>Vos</b> visites reçues</h3>
+   </div>
+   <div class="panel-body">
+   <?php if(count($profils)): ?>
+   
+   <div class="row">
+   <?php foreach ($profils as $user): ?>
+   <div class="col-sm-3 col-md-3 col-xs-6">
+       <div class="thumbnail">      
+          <a href="<?php echo $this->url('user/view',array('id'=>$user->getId())) ?>"><img src="<?php echo $user->getPhoto() ?>" alt="..."></a>
+              <div class="fix">
+                  <div class="desc">
+                        <p class="desc_content"><small><?php echo $user->getName() ?></small></p>
+                  </div>
+              </div>
+       </div>
+       <p class="text-center"><button class="btn btn-xs btn-block btn-danger">Retirer des favoris</button></p>
+   </div>
+   <?php endforeach ?>
+                        
+   </div>
+   
+   <?php else: ?>
+   <div class="alert alert-info" role="alert"><strong>Désolé</strong>, vous n'avez pas eu encore de visite sur votre profil, mais ça ne devrait plus tarder...</div>
+   <?php endif ?>
+   </div>
+</div>

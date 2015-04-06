@@ -1,0 +1,47 @@
+<div class="main" style="background: url('http://www.mrwallpaper.com/wallpapers/Autumn-Love.jpg')">
+     <div class="container">
+
+          <section style="margin-top:24px">
+               <div class="row">
+                    <div class="col-sm-6 col-md-6">
+                         <div class="signup">
+                              <form method="POST" action="/register">
+                                   <fieldset>
+                                        <div class="social_sign">
+                                             <h3>Vous n'avez pas de compte ?</h3>
+                                             <a><i class="fa fa-user"></i></a> </div>
+                                        <p class="sign_title">Inscrivez-vous c'est rapide et gratuit</p>
+                                        <div class="row">
+                                             <div class="col-lg-2"></div>
+                                             <div class="col-lg-8">
+                                                  <?php echo $this->formRow($form->get('name')) ?>
+                                                  <?php echo $this->formRow($form->get('email')) ?>
+                                                  <?php echo $this->formRow($form->get('password')) ?>
+                                                  <div class="checkbox text-left">
+                                                       <label class="text-left">
+                                                            <input type="checkbox" value="Option one" name="checkboxes">
+                                                            Je certifie être majeur(e)
+                                                      </label>
+                                                  </div>
+                                                  <div class="checkbox text-left">
+                                                       <label class="text-left">
+                                                            <input type="checkbox" value="Option one" name="checkboxes">
+                                                            J'ai lu et accepté les CGU
+                                                       </label>
+                                                  </div>
+                                                  
+                                                  
+                                             
+                                             </div>
+                                             <div class="col-lg-2">                                          	
+                                             </div>
+                                        </div>
+                                        <button class="btn btn-success btn-lg" type="submit">Valider mon inscription</button>
+                                   </fieldset>
+                              </form>
+                         </div>
+                    </div>
+               </div>
+          </section>
+     </div>
+</div>
