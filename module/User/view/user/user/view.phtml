@@ -67,7 +67,7 @@
                     <div class="col-sm-4 col-md-3">
                         <div class="btn-group btn-group-justified" role="group" aria-label="...">
                             <div class="btn-group" role="group">
-                                <a href="<?php echo $this->url('mailbox/compose',['user'=> $user->getId()]) ?>" class="btn btn-primary"><span class="glyphicon glyphicon-envelope"></span> Écrire</a>
+                                <a href="<?php echo $this->url('mailbox/compose',array('user'=> $user->getId())) ?>" class="btn btn-primary"><span class="glyphicon glyphicon-envelope"></span> Écrire</a>
                             </div>
                             <div class="btn-group" role="group">
                                 <button type="button" class="btn btn-primary" id="send_flash" data-id="<?php echo $user->getId() ?>"><span class="glyphicon glyphicon-flash"></span> Flash</button>

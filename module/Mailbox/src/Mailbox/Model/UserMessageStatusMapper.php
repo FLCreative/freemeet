@@ -77,7 +77,7 @@
      {
          $select = $this->sql->select();
      
-         $select->where(['status_user_id' => $owner, 'status_value'=>'unread']);
+         $select->where(array('status_user_id' => $owner, 'status_value'=>'unread'));
          
          $statement = $this->sql->prepareStatementForSqlObject($select);
          $result    = $statement->execute();
@@ -89,9 +89,9 @@
      {
          $update = $this->sql->update();
 
-         $update->where(['status_user_id' => $user, 'status_message_id'=>$message]);
+         $update->where(array('status_user_id' => $user, 'status_message_id'=>$message));
          
-         $update->set(['status_value'=>$value]);
+         $update->set(array('status_value'=>$value));
           
          $statement = $this->sql->prepareStatementForSqlObject($update);
          $result    = $statement->execute();

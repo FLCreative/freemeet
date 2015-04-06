@@ -37,8 +37,8 @@
          
          $expression = new Expression('photo_owner = user_id AND photo_type ="main" AND photo_status = "validated"');
          $select->join(array('p'=>'users_photos'),$expression,array('user_photo'=>'photo_filename'),'left');
-         $select->join('cities','city_id = user_city',['user_city_name'=>'city_name','user_department_name'=>'city_admin_name2']);
-         $select->join('countries','country_code = city_country_code',['user_country_name'=>'country_name']);
+         $select->join('cities','city_id = user_city',array('user_city_name'=>'city_name','user_department_name'=>'city_admin_name2'));
+         $select->join('countries','country_code = city_country_code',array('user_country_name'=>'country_name'));
          
          $statement = $this->sql->prepareStatementForSqlObject($select);         
          

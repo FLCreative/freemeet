@@ -129,7 +129,7 @@
              $select->limit($params['limit']);
          }
          
-         $select->join('users', 'action_user = user_id', ['action_username'=>'user_name']);
+         $select->join('users', 'action_user = user_id', array('action_username'=>'user_name'));
          
          $select->order('action_id DESC');
          

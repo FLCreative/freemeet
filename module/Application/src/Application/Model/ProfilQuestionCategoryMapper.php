@@ -11,7 +11,7 @@
  
  class UserBlacklistMapper
  {
-     protected $tableName = 'users_profils_blacklisted';
+     protected $tableName = 'questions_categories';
      protected $dbAdapter;
      protected $sql;
 
