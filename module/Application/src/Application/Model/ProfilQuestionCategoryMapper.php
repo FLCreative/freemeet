@@ -9,9 +9,9 @@
  
  use Application\Model\UserBlacklist;
  
- class UserBlacklistMapper
+ class ProfilQuestionCategoryMapper
  {
-     protected $tableName = 'questions_categories';
+     protected $tableName = 'profil_questions_categories';
      protected $dbAdapter;
      protected $sql;
 
@@ -43,35 +43,48 @@
          return $blacklist;
      }
      
-     public function save(UserBlacklist $blacklist)
+     public function save(ProfilQuestionCategory $category)
      {
          $hydrator = new ClassMethods();
           
          $hydrator->setNamingStrategy(new FirstUnderscoreNamingStrategy);
           
-         $hydratedData = $hydrator->extract($blacklist);
+         $hydratedData = $hydrator->extract($category);
           
          $data = array();
           
          foreach ($hydratedData as $key => $value)
          {
-             $data['favorite_'.$key] = $value;
+             $data['category_'.$key] = $value;
          }
+         
           
-         $action = $this->sql->insert();
-         unset($data['favorite_id']);
-         $action->values($data);
-             
+         if ($category->getId()) {
+             // update action
+             $action = $this->sql->update();
+             $action->set($data);
+             $action->where(array('category_id' => $category->getId()));
+         } else {
+             // insert action
+             $action = $this->sql->insert();
+             unset($data['category_id']);
+             $action->values($data);
+         }
+         
          $statement = $this->sql->prepareStatementForSqlObject($action);
          $result = $statement->execute();
+         
+         if (!$category->getId()) {
+             $category->setId($result->getGeneratedValue());
+         }
           
          return $result;
      }
      
-     public function delete(UserBlacklist $blacklist)
+     public function delete(ProfilQuestionCategory $category)
      {
          $delete = $this->sql->delete();
-         $delete->where(array('blacklist_owner' => $blacklist->getOwner()));
+         $delete->where(array('category_id' => $category->getId()));
           
          $statement = $this->sql->prepareStatementForSqlObject($delete);
          return $statement->execute();
@@ -79,17 +92,12 @@
      
      public function fetchAll($params = array())
      {
-         $select = $this->sql->select();
-         
-         if(isset($params['owner']))
-         {
-             $select->where(array('blacklist_owner = ?'=>$params['owner']));
-         }            
-
+         $select = $this->sql->select();        
+            
          $statement = $this->sql->prepareStatementForSqlObject($select);
          $results = $statement->execute();
 
-         $entityPrototype = new UserBlacklist();
+         $entityPrototype = new ProfilQuestionCategory();
          $hydrator = new ClassMethods();
          
          $hydrator->setNamingStrategy(new FirstUnderscoreNamingStrategy);

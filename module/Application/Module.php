@@ -20,6 +20,7 @@ use Zend\Mvc\Router\RouteMatch;
 use Zend\Authentication\Adapter\DbTable as AuthAdapter;
 use Zend\Mvc\Application;
 use Application\Model\UserBlacklistMapper;
+use Application\Model\ProfilQuestionCategoryMapper;
 
 class Module
 {
@@ -199,6 +200,12 @@ protected $whitelist = array('login','register','authenticate','home');
     					    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
     					    $mapper = new UserPhotoMapper($dbAdapter);
     					    return $mapper;
+    					},
+    					
+    					'QuestionCategoryMapper' => function ($sm) {
+    						$dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+    						$mapper = new ProfilQuestionCategoryMapper($dbAdapter);
+    						return $mapper;
     					},
     					
     					'WarningMapper' => function ($sm) {

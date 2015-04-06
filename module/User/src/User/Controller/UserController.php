@@ -70,6 +70,11 @@ class UserController extends AbstractActionController
     	    $favorite = false;
     	}
     	
+    	// GET PROFIL QUESTIONS & CATEGORIES
+    	
+    	$categoryMapper = $this->getServiceLocator()->get('QuestionCategoryMapper');
+    	$categories = $categoryMapper->fetchAll();
+    	
     	// ADD VIEW ACTION
     	
     	$actionMapper = $this->getServiceLocator()->get('ActionMapper');
@@ -93,7 +98,8 @@ class UserController extends AbstractActionController
         return array(
             'user'     => $user,
             'photos'   => $photos,
-            'favorite' => $favorite
+            'favorite' => $favorite,
+        	'categories' => $categories
         );
     }
     
