@@ -72,8 +72,27 @@ class UserController extends AbstractActionController
     	
     	// GET PROFIL QUESTIONS & CATEGORIES
     	
+        $categories = array();
+    	
     	$categoryMapper = $this->getServiceLocator()->get('QuestionCategoryMapper');
-    	$categories = $categoryMapper->fetchAll();
+    	$questionMapper = $this->getServiceLocator()->get('QuestionMapper');
+    	
+    	foreach($categoryMapper->fetchAll() as $category)
+    	{
+    	    $data = array(
+    	        'name'      => $category->getName(),
+    	        'questions' => array()
+    	    );
+    	    
+    	    $questions = $questionMapper->fetchAll(array('category'=>$category->getId()));
+    	    
+    	    foreach($questions as $question)
+    	    {
+    	        $data['questions'][] = $question;
+    	    }
+    	    
+    	    $categories[] = $data;
+    	}
     	
     	// ADD VIEW ACTION
     	

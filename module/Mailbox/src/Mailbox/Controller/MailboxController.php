@@ -51,7 +51,7 @@ class MailboxController extends AbstractActionController
                 
                // Set message status to read
                
-               $messages = $messageMapper->fetchAll(['conversation'=>$conversation->getId(), 'status'=> 'unread']);
+               $messages = $messageMapper->fetchAll(array('conversation'=>$conversation->getId(), 'status'=> 'unread'));
                
                if(count($messages))
                {

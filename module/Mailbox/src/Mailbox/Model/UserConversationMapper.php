@@ -128,11 +128,15 @@
      {
          $select = $this->sql->select();
          
-         $select->join($name, $on);
+         $select->quantifier(\Zend\Db\Sql\Select::QUANTIFIER_DISTINCT);
+         $select->join('users_conversations_participants', 'participant_conversation = conversation_id', array());
+         $select->where(array('participant_id IN (?,?)'=>array($user1,$user2)));
+         $select->group('participant_id');
          
          $statement = $this->sql->prepareStatementForSqlObject($select);
          $result = $statement->execute()->current();
-          
+         
+         
          if (!$result) {
              return null;
          }

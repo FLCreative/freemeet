@@ -21,6 +21,7 @@ use Zend\Authentication\Adapter\DbTable as AuthAdapter;
 use Zend\Mvc\Application;
 use Application\Model\UserBlacklistMapper;
 use Application\Model\ProfilQuestionCategoryMapper;
+use Application\Model\ProfilQuestionMapper;
 
 class Module
 {
@@ -206,6 +207,12 @@ protected $whitelist = array('login','register','authenticate','home');
     						$dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
     						$mapper = new ProfilQuestionCategoryMapper($dbAdapter);
     						return $mapper;
+    					},
+    					
+    					'QuestionMapper' => function ($sm) {
+    					    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+    					    $mapper = new ProfilQuestionMapper($dbAdapter);
+    					    return $mapper;
     					},
     					
     					'WarningMapper' => function ($sm) {

@@ -115,6 +115,9 @@ return array(
             'Account' => array(
                 'default' => 'layout/layout-logged',
             ),
+            'Admin' => array(
+                'default' => 'layout/layout-admin',
+            ),
             'Mailbox' => array(
                 'default' => 'layout/layout-logged',
             ),

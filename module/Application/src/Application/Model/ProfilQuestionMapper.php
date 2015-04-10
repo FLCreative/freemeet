@@ -9,7 +9,7 @@
  
  use Application\Model\UserBlacklist;
  
- class UserBlacklistMapper
+ class ProfilQuestionMapper
  {
      protected $tableName = 'profil_questions';
      protected $dbAdapter;
