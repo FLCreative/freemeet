@@ -9,4 +9,5 @@ return array(
     'Zend\\' => array($vendorDir . '/zendframework/zendframework/library'),
     'ZendXml' => array($vendorDir . '/zendframework/zendxml/library'),
     'TwbBundle' => array($vendorDir . '/neilime/zf2-twb-bundle/src'),
+    'Psr\\Log\\' => array($vendorDir . '/psr/log'),
 );

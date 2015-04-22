@@ -128,14 +128,13 @@
      {
          $select = $this->sql->select();
          
-         $select->quantifier(\Zend\Db\Sql\Select::QUANTIFIER_DISTINCT);
-         $select->join('users_conversations_participants', 'participant_conversation = conversation_id', array());
-         $select->where(array('participant_id IN (?,?)'=>array($user1,$user2)));
-         $select->group('participant_id');
+         $select->join(array('p1'=>'users_conversations_participants'), 'p1.participant_conversation = conversation_id', array());
+         $select->join(array('p2'=>'users_conversations_participants'), 'p2.participant_conversation = conversation_id', array());
+         $select->where(array('p1.participant_id = ?'=>$user1));
+         $select->where(array('p2.participant_id = ?'=>$user2));
          
          $statement = $this->sql->prepareStatementForSqlObject($select);
-         $result = $statement->execute()->current();
-         
+         $result = $statement->execute()->current();         
          
          if (!$result) {
              return null;
@@ -154,7 +153,7 @@
      {
          $select = $this->sql->select();
          $select->join('users_messages','message_conversation_id = conversation_id',array());
-         $select->where(['conversation_id = ?'=>$conversation->getId()]);
+         $select->where(array('conversation_id = ?'=>$conversation->getId()));
          $select->columns(array('COUNT'=>new \Zend\Db\Sql\Expression('COUNT(message_id)')));
          
          $statement = $this->sql->prepareStatementForSqlObject($select);
@@ -173,8 +172,8 @@
          {             
              $expression = new Expression('p2.participant_conversation = conversation_id AND p2.participant_id != '.$params['owner']);
              
-             $select->join(['p1'=>'users_conversations_participants'], 'p1.participant_conversation = conversation_id', array());
-             $select->join(['p2'=>'users_conversations_participants'], $expression, array('receiver'=>'participant_id'));
+             $select->join(array('p1'=>'users_conversations_participants'), 'p1.participant_conversation = conversation_id', array());
+             $select->join(array('p2'=>'users_conversations_participants'), $expression, array('receiver'=>'participant_id'));
              $select->where(array('p1.participant_id' => $params['owner']));
              $select->group('conversation_id');
          }
@@ -183,19 +182,19 @@
          $subSql->setTable('users_messages');
          
          $subSelect = $subSql->select();
-         $subSelect->columns(['message_content','message_id','message_date','message_conversation_id','message_author']);
+         $subSelect->columns(array('message_content','message_id','message_date','message_conversation_id','message_author'));
          $subSelect->order('message_id DESC');
          
-         $subSelect->join('users_messages_status','message_id = status_message_id',['status_value']);
-         $subSelect->where(['status_user_id = ?'=>$params['owner']]);
+         $subSelect->join('users_messages_status','message_id = status_message_id',array('status_value'));
+         $subSelect->where(array('status_user_id = ?'=>$params['owner']));
 
-         $select->join(['um'=>'users_messages'],'message_conversation_id = conversation_id',array());
-         $select->join(['s'=>'users_messages_status'],'message_id = status_message_id',array());
-         $select->where(['s.status_value != ?'=>'deleted']);
-         $select->where(['s.status_user_id = ?'=>$params['owner']]);
+         $select->join(array('um'=>'users_messages'),'message_conversation_id = conversation_id',array());
+         $select->join(array('s'=>'users_messages_status'),'message_id = status_message_id',array());
+         $select->where(array('s.status_value != ?'=>'deleted'));
+         $select->where(array('s.status_user_id = ?'=>$params['owner']));
          $select->having('count(*) > 0');
          
-         $select->join(['m'=>$subSelect], 'm.message_conversation_id = conversation_id',['conversation_last_message_status'=>'status_value','conversation_last_user'=>'message_author','conversation_last_message'=>'message_content', 'conversation_last_message_date'=>'message_date']);
+         $select->join(array('m'=>$subSelect), 'm.message_conversation_id = conversation_id',array('conversation_last_message_status'=>'status_value','conversation_last_user'=>'message_author','conversation_last_message'=>'message_content', 'conversation_last_message_date'=>'message_date'));
          
          $select->join('users', 'user_id = p2.participant_id', array('conversation_username'=>'user_name', 'conversation_type'=>'user_type'));
          

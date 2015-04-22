@@ -295,6 +295,11 @@
      {
          $select = $this->sql->select();
          
+         if(isset($params['where']))
+         {
+         	$select->where($params['where']);
+         }
+         
          if(isset($params['status']))
          {
              $select->where(array('user_status'=>$params['status']));

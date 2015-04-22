@@ -98,18 +98,80 @@
         ]
     },
     {
-        "name": "zendframework/zendframework",
-        "version": "2.3.4",
-        "version_normalized": "2.3.4.0",
+        "name": "neilime/zf2-twb-bundle",
+        "version": "2.3.0",
+        "version_normalized": "2.3.0.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/zendframework/zf2.git",
-            "reference": "c878e047ab1c5dcfb201974bdff607be54ccb54b"
+            "url": "https://github.com/neilime/zf2-twb-bundle.git",
+            "reference": "6804967b530c7e4bbb878adf0fc5fcbb54626448"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/zendframework/zf2/zipball/c878e047ab1c5dcfb201974bdff607be54ccb54b",
-            "reference": "c878e047ab1c5dcfb201974bdff607be54ccb54b",
+            "url": "https://api.github.com/repos/neilime/zf2-twb-bundle/zipball/6804967b530c7e4bbb878adf0fc5fcbb54626448",
+            "reference": "6804967b530c7e4bbb878adf0fc5fcbb54626448",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.2",
+            "zendframework/zendframework": "2.3.*@stable"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "3.*@stable",
+            "satooshi/php-coveralls": "0.*@stable"
+        },
+        "suggest": {
+            "neilime/zf2-assets-bundle": "Bundling & caching Twitter Bootstrap assets",
+            "twitter/bootstrap": "Twitter bootstrap assets"
+        },
+        "time": "2014-05-11 15:19:06",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "TwbBundle": "src"
+            },
+            "classmap": [
+                "Module.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Neilime",
+                "homepage": "https://github.com/neilime",
+                "role": "Developer"
+            }
+        ],
+        "description": "Zend Framework 2 module for easy integration of Twitter Bootstrap",
+        "homepage": "http://neilime.github.io/zf2-twb-bundle/",
+        "keywords": [
+            "bundle",
+            "twitter bootstrap",
+            "zend framework 2"
+        ]
+    },
+    {
+        "name": "zendframework/zendframework",
+        "version": "2.3.7",
+        "version_normalized": "2.3.7.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zendframework/zf2.git",
+            "reference": "a1aae5fdd27a422beb32c56ddf5a197654a0f94a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zendframework/zf2/zipball/a1aae5fdd27a422beb32c56ddf5a197654a0f94a",
+            "reference": "a1aae5fdd27a422beb32c56ddf5a197654a0f94a",
             "shasum": ""
         },
         "require": {
@@ -187,7 +249,7 @@
             "zendframework/zendpdf": "ZendPdf for creating PDF representations of barcodes",
             "zendframework/zendservice-recaptcha": "ZendService\\ReCaptcha for rendering ReCaptchas in Zend\\Captcha and/or Zend\\Form"
         },
-        "time": "2015-01-14 16:44:17",
+        "time": "2015-03-12 16:55:53",
         "bin": [
             "bin/classmap_generator.php",
             "bin/pluginmap_generator.php",
@@ -218,47 +280,27 @@
         ]
     },
     {
-        "name": "neilime/zf2-twb-bundle",
-        "version": "2.3.0",
-        "version_normalized": "2.3.0.0",
+        "name": "psr/log",
+        "version": "1.0.0",
+        "version_normalized": "1.0.0.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/neilime/zf2-twb-bundle.git",
-            "reference": "6804967b530c7e4bbb878adf0fc5fcbb54626448"
+            "url": "https://github.com/php-fig/log.git",
+            "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/neilime/zf2-twb-bundle/zipball/6804967b530c7e4bbb878adf0fc5fcbb54626448",
-            "reference": "6804967b530c7e4bbb878adf0fc5fcbb54626448",
+            "url": "https://api.github.com/repos/php-fig/log/zipball/fe0936ee26643249e916849d48e3a51d5f5e278b",
+            "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b",
             "shasum": ""
         },
-        "require": {
-            "php": ">=5.3.2",
-            "zendframework/zendframework": "2.3.*@stable"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "3.*@stable",
-            "satooshi/php-coveralls": "0.*@stable"
-        },
-        "suggest": {
-            "neilime/zf2-assets-bundle": "Bundling & caching Twitter Bootstrap assets",
-            "twitter/bootstrap": "Twitter bootstrap assets"
-        },
-        "time": "2014-05-11 15:19:06",
+        "time": "2012-12-21 11:40:51",
         "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.0-dev"
-            }
-        },
         "installation-source": "dist",
         "autoload": {
             "psr-0": {
-                "TwbBundle": "src"
-            },
-            "classmap": [
-                "Module.php"
-            ]
+                "Psr\\Log\\": ""
+            }
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
@@ -266,17 +308,83 @@
         ],
         "authors": [
             {
-                "name": "Neilime",
-                "homepage": "https://github.com/neilime",
-                "role": "Developer"
+                "name": "PHP-FIG",
+                "homepage": "http://www.php-fig.org/"
             }
         ],
-        "description": "Zend Framework 2 module for easy integration of Twitter Bootstrap",
-        "homepage": "http://neilime.github.io/zf2-twb-bundle/",
+        "description": "Common interface for logging libraries",
         "keywords": [
-            "bundle",
-            "twitter bootstrap",
-            "zend framework 2"
+            "log",
+            "psr",
+            "psr-3"
+        ]
+    },
+    {
+        "name": "wisembly/elephant.io",
+        "version": "v3.0.0",
+        "version_normalized": "3.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Wisembly/elephant.io.git",
+            "reference": "61f7eb8dcc2ac939aad526745c8042ce1cd4a54d"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Wisembly/elephant.io/zipball/61f7eb8dcc2ac939aad526745c8042ce1cd4a54d",
+            "reference": "61f7eb8dcc2ac939aad526745c8042ce1cd4a54d",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.4.0",
+            "psr/log": "~1.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~4.0"
+        },
+        "time": "2014-09-08 10:52:10",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "ElephantIO\\": [
+                    "src/",
+                    "test/"
+                ]
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Baptiste Clavié",
+                "email": "baptiste@wisembly.com",
+                "homepage": "http://baptiste.xn--clavi-fsa.net/",
+                "role": "Maintainer"
+            },
+            {
+                "name": "Guillaume Potier",
+                "email": "guillaume@wisembly.com",
+                "role": "Maintainer"
+            },
+            {
+                "name": "Ludovic Barreca",
+                "email": "ludogp2@gmail.com",
+                "role": "Project Founder"
+            },
+            {
+                "name": "Elephant.IO Community",
+                "role": "Contributors :)"
+            }
+        ],
+        "description": "Send events to a websocket real time engine though PHP",
+        "homepage": "http://elephant.io",
+        "keywords": [
+            "dialog",
+            "nodejs",
+            "real time",
+            "websocket"
         ]
     }
 ]

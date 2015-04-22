@@ -16,7 +16,9 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
-        $auth = $this->getServiceLocator()->get('AuthService');
+    	$this->layout('layout/guest');
+    	
+    	$auth = $this->getServiceLocator()->get('AuthService');
         
         if($auth->hasIdentity())
         {

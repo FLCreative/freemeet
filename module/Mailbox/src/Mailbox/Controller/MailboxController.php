@@ -20,15 +20,53 @@ use Mailbox\Form\AddConversationForm;
 use Mailbox\Form\ReplyConversationForm;
 use Zend\View\Model\JsonModel;
 
+use ElephantIO\Client;
+use ElephantIO\Engine\SocketIO\Version1X;
+
 class MailboxController extends AbstractActionController
 {
     public function indexAction()
     {
-        $mapper = $this->getServiceLocator()->get('ConversationMapper');
-        $conversations = $mapper->fetchAll(['owner' => $this->identity()->user_id]);
-             
+    	$this->layout()->fullLayout = true;
+    	
+    	$form = new ReplyConversationForm();
+    	
+    	$mapper = $this->getServiceLocator()->get('ConversationMapper');
+        $results = $mapper->fetchAll(array('owner' => $this->identity()->user_id));
+        
+        $messageMapper = $this->getServiceLocator()->get('MessageMapper');
+        
+        $conversations = array();
+        
+        foreach($results as $index => $conversation)
+        {
+	        if($index === 0)
+	        {
+		        // Set message status to read   
+		        $messages = $messageMapper->fetchAll(array('conversation'=>$conversation->getId(), 'status'=> 'unread'));
+		         
+		        if(count($messages))
+		        {	        	 
+		        	$messageStatusMapper = $this->getServiceLocator()->get('MessageStatusMapper');
+		        	 
+		        	foreach($messages as $message)
+		        	{
+		        		$messageStatusMapper->updateStatus($message->getId(), $this->identity()->user_id, 'read');
+		        	}
+		        }
+		         
+		        $messages = $messageMapper->fetchAll(array('conversation'=>$conversation->getId(),'owner'=>$this->identity()->user_id));
+		         		         
+		        $form->get('conversation')->setValue($conversation->getId());
+	        	
+		        $conversations[] = $conversation;
+	        }
+        }
+        
         return array(
-            'conversations'=> $conversations
+            'conversations'=> $conversations,
+        	'messages'	   => $messages,
+        	'form'		   => $form
         );
     }
 
@@ -56,7 +94,7 @@ class MailboxController extends AbstractActionController
                if(count($messages))
                {
                                        
-                   $messageStatusMapper = $this->getServiceLocator()->get('MessageStatusMapper');                  
+                   $messageStatusMapper = $this->getServiceLocator()->get('MessageStatusMapper');
                    
                    foreach($messages as $message)
                    {
@@ -64,7 +102,7 @@ class MailboxController extends AbstractActionController
                    }
                }
                
-               $messages = $messageMapper->fetchAll(['conversation'=>$conversation->getId(),'owner'=>$this->identity()->user_id]);
+               $messages = $messageMapper->fetchAll(array('conversation'=>$conversation->getId(),'owner'=>$this->identity()->user_id));
                
                $form = new ReplyConversationForm();
                
@@ -109,11 +147,11 @@ class MailboxController extends AbstractActionController
         
         $mapper = $this->getServiceLocator()->get('ConversationMapper');
         
-        $conversation = $mapper->findByUsers($this->identity()->user_id, $user->getId());
+        $conversation = $mapper->findByUsers($this->identity()->user_id, $user->getId());        
         
-        if($conversation->getId())
-        {
-            return $this->redirect()->toRoute('mailbox/reply', array('id'=>$conversation->getId()));
+        if($conversation)
+        {       	
+        	return $this->redirect()->toRoute('mailbox/view', array('id'=>$conversation->getId()));
         }
 
         $form = new AddConversationForm();
@@ -187,17 +225,21 @@ class MailboxController extends AbstractActionController
                 
                             $con->commit();
                             
+                            $client = new Client(new Version1X('http://localhost:3000'));
+                            $client->initialize();
+                            $client->emit('broadcast', array('foo' => 'bar'));
+                            $client->close();                                                       
+                            
                             if($this->getRequest()->isXmlHttpRequest())
                             {
                                 $user = $sm->get('currentuser');
                                 
-                                return new JsonModel(['status'=>'success','date'=>'à l\'instant','message'=>nl2br($message->getContent()),'photo'=>$user->getPhoto('small')]);
+                                return new JsonModel(array('status'=>'success','date'=>'à l\'instant','message'=>nl2br($message->getContent()),'photo'=>$user->getPhoto('small')));
                             }
                 
                             $this->flashMessenger()->setNamespace('success')->addMessage('Votre message a été envoyé !');
-                
+                            
                             return $this->redirect()->toRoute('mailbox');
-                
                         }
                 
                         catch(Exception $e)
@@ -342,7 +384,7 @@ class MailboxController extends AbstractActionController
                         
                // Set message status to read
                
-               $messages = $messageMapper->fetchAll(['conversation'=>$conversation->getId()]);
+               $messages = $messageMapper->fetchAll(array('conversation'=>$conversation->getId()));
                
                if(count($messages))
                {
@@ -354,7 +396,7 @@ class MailboxController extends AbstractActionController
                    
                    try {
                    
-                       $messageStatusMapper = $this->getServiceLocator()->get('MessageStatusMapper');                  
+                       $messageStatusMapper = $this->getServiceLocator()->get('MessageStatusMapper');
                        
                        foreach($messages as $message)
                        {

@@ -16,7 +16,7 @@ $(function() {
   var typing = false;
   var lastTypingTime;
 
-  var socket = io.connect('http://localhost:3000');;
+  var socket = io.connect('http://localhost:3000');
 
   function addParticipantsMessage (data) {
     var message = '';

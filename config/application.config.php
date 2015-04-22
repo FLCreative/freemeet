@@ -2,8 +2,22 @@
 return array(
     // This should be an array of module namespaces used in the application.
     'modules' => array(
-        'Application','User','Search','Login','Logout','Account','Mailbox','Register','Chat','Photo','admin'
+        'Application','Login','Mailbox','Register','Photo','Admin'
     ),
+		
+		'session' => array(
+				'config' => array(
+						'class' => 'Zend\Session\Config\SessionConfig',
+						'options' => array(
+								'name' => 'myapp',
+						),
+				),
+				'storage' => 'Zend\Session\Storage\SessionArrayStorage',
+				'validators' => array(
+						'Zend\Session\Validator\RemoteAddr',
+						'Zend\Session\Validator\HttpUserAgent',
+				),
+		),
 
     // These are various options for the listeners attached to the ModuleManager
     'module_listener_options' => array(
@@ -13,7 +27,7 @@ return array(
         // Module class.
         'module_paths' => array(
             './module',
-            './vendor','./module','./module','./module','./module',
+            './vendor',
         ),
 
         // An array of paths from which to glob configuration files after

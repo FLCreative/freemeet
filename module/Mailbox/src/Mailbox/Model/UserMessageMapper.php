@@ -110,8 +110,8 @@
      {
          $select = $this->sql->select();
          $select->join('users_messages_status','status_message_id = message_id',array());
-         $select->where(['message_conversation_id'=>$conversation->getId()]);
-         $select->where(['status_value'=>'deleted']);
+         $select->where(array('message_conversation_id'=>$conversation->getId()));
+         $select->where(array('status_value'=>'deleted'));
          $select->group('message_id');
          $select->having('count(message_id) = 2');
          

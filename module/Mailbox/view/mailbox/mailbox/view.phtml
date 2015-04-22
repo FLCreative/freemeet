@@ -13,7 +13,7 @@
     <li class="right">
         <span class="date-time" data-time="<?php echo $message->getDate(true) ?>"><?php echo $this->relativeTime($message->getDate()) ?></span>
         <a class="name" href="javascript:;">Vous</a>
-        <a class="image" href="<?php echo $this->url('user/view', ['id'=>$message->getAuthor()]) ?>">
+        <a class="image" href="<?php echo $this->url('user/view', array('id'=>$message->getAuthor())) ?>">
           <img src="<?php echo $message->getPhoto('small') ?>">
         </a>
         <div class="message">
@@ -23,8 +23,8 @@
     <?php else : ?>
     <li class="left">
         <span class="date-time" data-time="<?php echo $message->getDate(true) ?>"><?php echo $this->relativeTime($message->getDate()) ?></span>
-        <a class="name" href="<?php echo $this->url('user/view', ['id'=>$message->getAuthor()]) ?>"><?php echo $this->escapehtml($message->getUsername())?></a>
-        <a class="image" href="<?php echo $this->url('user/view', ['id'=>$message->getAuthor()]) ?>">
+        <a class="name" href="<?php echo $this->url('user/view', array('id'=>$message->getAuthor())) ?>"><?php echo $this->escapehtml($message->getUsername())?></a>
+        <a class="image" href="<?php echo $this->url('user/view', array('id'=>$message->getAuthor())) ?>">
           <img src="<?php echo $message->getPhoto('small') ?>">
         </a>
         <div class="message">

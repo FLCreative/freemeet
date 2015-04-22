@@ -1,31 +1,210 @@
-<?php
- $title = 'My task list';
- $this->headTitle($title);
- ?>
- <h1><?php echo $this->escapeHtml($title); ?></h1>
- <p><a href="<?php echo $this->url('test', array(
-         'action'=>'add'));?>">Add new item</a></p>
+                <div class="block">
+                	
+                    <div class="title">
+                        <h3 class="section_header skincolored"><span class="glyphicon glyphicon-signal"></span> <b>En</b> Ligne</h3>                    
+                    </div>
+                    <div class="content" style="background-color: #eeeeee">
+                    
+                        <div class="row">
+                            <div class="col-sm-3 col-md-2">
+                                    <img height="240px" class="img-thumbnail" id="display_photo"
+                                    name="27" src=
+                                    "http://www.freemeet.net/upload/1357993839.jpg"
+                                    width="240px">
 
+                            </div>
+                            <div class="col-sm-3 col-md-2">
+                                    <img height="240px" class="img-thumbnail" id="display_photo"
+                                    name="27" src=
+                                    "http://www.freemeet.net/upload/1368196992.jpg"
+                                    width="240px">
 
- <table class="table">
- <tr>
-     <th>Task</th>
-     <th>Created</th>
-     <th>Completed?</th>
-     <th>&nbsp;</th>
- </tr>
- <?php foreach ($tasks as $task): ?>
- <tr>
-     <td>
-         <a href="<?php echo $this->url('test',
-             array('action'=>'edit', 'id' => $task->getId()));?>">
-             <?php echo $this->escapeHtml($task->getTitle()); ?></a>
-     </td>
-     <td><?php echo $this->escapeHtml($task->getCreated()); ?></td>
-     <td><?php echo $task->getCompleted() ? 'Yes' : 'No'; ?></td>
-     <td>
-         <a href="<?php echo $task->getId();?>">Delete</a>
-     </td>
- </tr>
- <?php endforeach; ?>
- </table>
+                            </div>
+
+                            <div class="col-sm-3 col-md-2">
+                                    <img height="240px" class="img-thumbnail" id="display_photo"
+                                    name="27" src=
+                                    "http://www.freemeet.net/upload/1357993839.jpg"
+                                    width="240px">
+
+                            </div>
+
+                            <div class="col-sm-3 col-md-2">
+                                    <img height="240px" class="img-thumbnail" id="display_photo"
+                                    name="27" src=
+                                    "http://www.freemeet.net/upload/1357669182.jpg"
+                                    width="240px">
+
+                            </div>
+
+                            <div class="col-sm-3 col-md-2">
+                                    <img height="240px" class="img-thumbnail" id="display_photo"
+                                    name="27" src=
+                                    "http://www.freemeet.net/upload/1288536776.jpg"
+                                    width="240px">
+
+                            </div>
+                            
+                            <div class="col-sm-3 col-md-2">
+                                    <img height="240px" class="img-thumbnail" id="display_photo"
+                                    name="27" src=
+                                    "http://www.freemeet.net/upload/1357669182.jpg"
+                                    width="240px">
+
+                            </div>
+                            
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-sm-3 col-md-2">
+                                    <img height="240px" class="img-thumbnail" id="display_photo"
+                                    name="27" src=
+                                    "http://www.freemeet.net/upload/1357993839.jpg"
+                                    width="240px">
+
+                            </div>
+                            <div class="col-sm-3 col-md-2">
+                                    <img height="240px" class="img-thumbnail" id="display_photo"
+                                    name="27" src=
+                                    "http://www.freemeet.net/upload/1368196992.jpg"
+                                    width="240px">
+
+                            </div>
+
+                            <div class="col-sm-3 col-md-2">
+                                    <img height="240px" class="img-thumbnail" id="display_photo"
+                                    name="27" src=
+                                    "http://www.freemeet.net/upload/1357993839.jpg"
+                                    width="240px">
+
+                            </div>
+
+                            <div class="col-sm-3 col-md-2">
+                                    <img height="240px" class="img-thumbnail" id="display_photo"
+                                    name="27" src=
+                                    "http://www.freemeet.net/upload/1357669182.jpg"
+                                    width="240px">
+
+                            </div>
+
+                            <div class="col-sm-3 col-md-2">
+                                    <img height="240px" class="img-thumbnail" id="display_photo"
+                                    name="27" src=
+                                    "http://www.freemeet.net/upload/1288536776.jpg"
+                                    width="240px">
+
+                            </div>
+                            
+                            <div class="col-sm-3 col-md-2">
+                                    <img height="240px" class="img-thumbnail" id="display_photo"
+                                    name="27" src=
+                                    "http://www.freemeet.net/upload/1357669182.jpg"
+                                    width="240px">
+
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+                
+                <br>
+                
+                <div class="block">
+	                <div class="title">
+	                	<h3 class="section_header skincolored"><span class="glyphicon glyphicon-user"></span> <b>Nouveaux</b> Membres</h3>                    
+	                </div>
+                    <div class="content">
+						<div class="row">
+						<div class="col-sm-6 col-md-6">	
+						<div class="media">
+						      <a href="#" class="media-left">
+						        <img alt="64x64" class="img-thumbnail img-responsive" src="http://www.freemeet.net/upload/1288536776_small.jpg"></a>
+						      <div class="media-body">
+						        <h4 class="media-heading">Pseudo - 18 ans</h4>
+						        <small>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo.</small>
+						      </div>
+						    </div>
+						  </div>  
+					<div class="col-sm-6 col-md-6">	    
+					<div class="media">
+      <a href="#" class="media-left">
+        <img alt="64x64" class="img-thumbnail img-responsive" src="http://www.freemeet.net/upload/1288536776_small.jpg"></a>
+      </a>
+      <div class="media-body">
+        <h4 class="media-heading">Pseudo - 18 ans</h4>
+        <small>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo.</small>
+      </div>
+    </div>
+    
+    </div>
+					</div>
+                    </div>
+                </div>
+                
+                <br>
+                
+                <div class="row">
+                <div class="col-sm-4 col-md-6">
+                <div class="block">
+	                <div class="title">
+	                	<h3 class="section_header skincolored"><span class="glyphicon glyphicon-search"></span> <b>Recherche</b> rapide</h3>                    
+	                </div>
+                    <div class="content">
+					<form role="form">
+					  <div class="form-group">
+					    <label for="exampleInputEmail1">Email address</label>
+					    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+					  </div>
+					  <div class="form-group">
+					    <label for="exampleInputPassword1">Password</label>
+					    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+					  </div>
+					  <button type="submit" class="btn btn-default">Submit</button>
+					</form>
+                    </div>
+                </div>
+                </div>
+                
+                <div class="col-sm-4 col-md-6">
+                <div class="block">
+	                <div class="title">
+	                	<h3 class="section_header skincolored"><span class="glyphicon glyphicon-list-alt"></span> <b>Dernières</b> Activitées</h3>                    
+	                </div>
+                    <div class="content list">
+                        <table class="table table-striped">
+                        	<tr>
+                        		<td><span class="glyphicon glyphicon-flash"></span></td>
+                        		<td>Visite de mon profil</td>
+                        	</tr>
+                        	
+                        	<tr>
+                        		<td><span class="glyphicon glyphicon-flash"></span></td>
+                        		<td><a href="">Pseudo</a> a Visiter votre profil</td>
+                        	</tr>
+                        	
+                        	<tr>
+                        		<td><span class="glyphicon glyphicon-flash"></span></td>
+                        		<td>Visite de mon profil</td>
+                        	</tr>
+                        	
+                        	<tr>
+                        		<td><span class="glyphicon glyphicon-flash"></span></td>
+                        		<td>Visite de mon profil</td>
+                        	</tr>
+                        	
+                        	<tr>
+                        		<td><span class="glyphicon glyphicon-flash"></span></td>
+                        		<td>Visite de mon profil</td>
+                        	</tr>
+                        	
+                        	<tr>
+                        		<td><span class="glyphicon glyphicon-flash"></span></td>
+                        		<td>Visite de mon profil</td>
+                        	</tr>
+                        </table>
+                    </div>
+                </div>
+                </div>
+                
+            </div>

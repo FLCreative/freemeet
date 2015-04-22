@@ -3,83 +3,207 @@
 <html lang="fr">
     <head>
         <meta charset="utf-8">
-        <?php echo $this->headTitle('FREEMEET '. $this->translate('Skeleton Application'))->setSeparator(' - ')->setAutoEscape(false) ?>
+        <?php echo $this->headTitle('ZF2 '. $this->translate('Skeleton Application'))->setSeparator(' - ')->setAutoEscape(false) ?>
 
         <?php echo $this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1.0') ?>
 
         <!-- Le styles -->
         <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
-                        ->prependStylesheet($this->basePath() . '/css/style.css')                        
-        				->prependStylesheet($this->basePath() . '/css/flexslider.css') 
-                        ->prependStylesheet($this->basePath() . '/css/bootstrap-theme.min.css')
+                        ->prependStylesheet($this->basePath() . '/css/application.css')
+                        ->prependStylesheet($this->basePath() . '/css/jquery.guillotine.css')
+                        ->prependStylesheet($this->basePath() . '/css/fileinput.min.css')
+                        ->prependStylesheet($this->basePath() . '/css/flexslider.css')
+                        ->prependStylesheet($this->basePath() . '/css/bootstrap-slider.css')
+                        ->prependStylesheet($this->basePath() . '/css/bootflat.css')
                         ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css') ?>
 
         <!-- Scripts -->
         <?php echo $this->headScript()->prependFile($this->basePath() . '/js/html5.js', 'text/javascript', array('conditional' => 'lt IE 9',))
                                       ->prependFile($this->basePath() . '/js/application.js')
+                                      ->prependFile($this->basePath() . '/js/jquery.slimscroll.min.js')
+                                      ->prependFile($this->basePath() . '/js/jquery.toaster.js')
+                                      ->prependFile($this->basePath() . '/js/moment.js')
+                                      ->prependFile($this->basePath() . '/js/fileinput.js')
+                                      ->prependFile($this->basePath() . '/js/jquery.guillotine.min.js')
                                       ->prependFile($this->basePath() . '/js/jquery.flexslider-min.js')
+                                      ->prependFile($this->basePath() . '/js/bootstrap-slider.js')
                                       ->prependFile($this->basePath() . '/js/bootstrap.min.js')
+                                      ->prependFile($this->basePath() . '/js/chat.js')
+                                      ->prependFile('http://localhost:3000/socket.io/socket.io.js')
                                       ->prependFile($this->basePath() . '/js/jquery.min.js') ?>
 
+        <script src="https://apis.google.com/js/platform.js" async defer>
+          {lang: 'fr';}
+        </script>
     </head>
     <body>
-        <header>
-     <div class="container">
-		<div class="row">
-			<div class="col-sm-6"><h3 style="font-size: 55px; margin-top: 20px; margin-bottom: 20px;"><img src="/images/logo.png"></h3></div>
-			<div class="col-sm-6">
-			<form class="form-inline" role="form" method="POST" action="/login" style="margin-top:40px">
+    <div id="fb-root"></div>
 
-  <div class="form-group">
-    <div class="input-group">
-      <input class="form-control" type="email" name="email" placeholder="Adresse email">
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="sr-only" for="exampleInputPassword2">Mot de passe</label>
-    <input type="password" class="form-control" id="exampleInputPassword2" name="password" placeholder="Mot de passe">
-  </div>
-  <button type="submit" class="btn btn-primary">Connexion</button>
-</form>
-<p style="font-size: 12px"><a href="">Mot de passe perdu</a> | <a href="#" data-toggle="modal" data-target="#myModal">Inscription</a></p>
-			</div>
-			
-		</div>
-     </div>
+    <header>
+    <nav role="navigation" class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button data-target="#bs-example-navbar-collapse-9" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a href="<?php echo $this->url('account') ?>" class="navbar-brand"><img src="/images/brand.png"></a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-9">
+          <ul class="nav navbar-nav navbar-left">
+            <li><a href="<?php echo $this->url('search') ?>"><span class="glyphicon glyphicon-search"></span> Rechercher</a></li>
+            <li><a href="<?php echo $this->url('account/favorite') ?>"><span class="glyphicon glyphicon-star"></span> Mes favoris</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li data-toggle="tooltip" data-placement="left" title="Tooltip on left">
+                <a href="<?php echo $this->url('mailbox') ?>">
+                    <span class="glyphicon glyphicon-envelope"></span> 
+
+
+                </a>
+            </li>
+            <li><a href="<?php echo $this->url('account/flash') ?>"><span class="glyphicon glyphicon-flash"></span></a></li>
+            <li><a href="<?php echo $this->url('account/visit') ?>"><span class="glyphicon glyphicon-eye-open"></span></a></li>
+            <li style="margin-left:10px" class="hidden-sm"></li>
+            <li class="dropdown"><a href="#" class="dropdown-toggle user" data-toggle="dropdown" role="button" aria-expanded="false"><img class="img-circle" src="<?php echo $this->currentuser()->getPhoto('xsmall') ?>" style="width: 30px; height:30px;"> <span id="user_name"><?php echo $this->identity()->user_name ?></span> <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+            <li><a href="<?php echo $this->url('account/profil') ?>"><span class="glyphicon glyphicon-pencil"></span> Modifier mon profil</a></li>
+            <li><a href="#"><span class="glyphicon glyphicon-eye-open"></span> Visualiser mon profil</a></li>
+            <li class="divider"></li>
+            <li><a href="<?php echo $this->url('account/preference') ?>"><span class="glyphicon glyphicon-cog"></span> Modifier mes préférences</a></li>
+            <li class="divider"></li>
+            <li><a href="<?php echo $this->url('account/logout') ?>"><span class="glyphicon glyphicon-off"></span> Se déconnecter</a></li>
+          </ul>
+            </li>
+          </ul>
+          
+          
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
 </header>
+            <div class="container" style="margin-top:70px">
+             <?php
+             $flash = $this->flashMessenger();
+				$flash->setMessageOpenFormat('<div%s>
+				     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+				         &times;
+				     </button>
+				     <ul><li>')
+				     ->setMessageSeparatorString('</li><li>')
+				     ->setMessageCloseString('</li></ul></div>');
+            
+             echo $flash->render('error',   array('alert', 'alert-dismissable', 'alert-danger'));
+             echo $flash->render('info',    array('alert', 'alert-dismissable', 'alert-info'));
+             echo $flash->render('default', array('alert', 'alert-dismissable', 'alert-warning'));
+             echo $flash->render('success', array('alert', 'alert-dismissable', 'alert-success'));
+             ?> 
+                    <div class="row">
+            <?php if(!$this->fullLayout): ?>
+            <div class="col-sm-4 col-md-3 col-lg-3 hidden-sm hidden-xs">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a href="<?php echo $this->url('account/profil') ?>" class="btn btn-primary btn-xs pull-right"><span class="glyphicon glyphicon-pencil"></span> Modifier</a>
+                        <h3 class="panel-title text-uppercase"><span class="glyphicon glyphicon-user"></span> <b>Mon Profil</b></h3>                    
+                    </div>
+                    <div class="panel-body">
+                    	<div class="media">
+						      <a href="#" class="media-left"><img class="img-thumbnail img-responsive" src="<?php echo $this->currentuser()->getPhoto('small') ?>"></a>
+						      <div class="media-body">
+						        <small><span class="glyphicon glyphicon-envelope"></span> 10 messages reçus</small><br>
+						        <small><span class="glyphicon glyphicon-flash"></span> 140 flashs reçus</small><br>
+						        <small><span class="glyphicon glyphicon-eye-open"></span> 2000 visites</small><br>
+						        <a href="<?php echo $this->url('account',array('action'=>'preference')) ?>" style="margin-top:5px" class="btn btn-primary btn-xs btn-panel panel-default">Visualiser mon profil</a>
+						      </div>
+						</div>
+						<br>
+						<p>Profil complété à 0%</p>
+						<div class="progress" style="margin-bottom: 0">
+						  <div style="width: 10%;" aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" role="progressbar" class="progress-bar progress-bar-danger">
+						      <span class="sr-only">0% Complete</span>
+						  </div>
+					    </div>
+                    	
+                	</div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a href="<?php echo $this->url('account') ?>" class="btn btn-primary btn-xs pull-right"> Gérer</a>
+                        <h3 class="panel-title text-uppercase"><span class="glyphicon glyphicon-star"></span> <b>Mes favoris</b></h3>                    
+                    </div>
+                    <?php if(count($this->userfavorites)):?>
+                    <table class="table table-condensed table-striped">
+                    	<tr>
+                    		<td width="30px"><img style="width: 30px; height:30px;" src="upload/1288536776_xsmall.jpg"></td>
+                    		<td style="line-height:30px">Pseudo - 18 ans</td>
+                    		<td style="line-height:30px"><span class="label label-success" id="chat_with" data-username="splithead"><span class="glyphicon glyphicon-signal"></span> En ligne</span></td>
+                    	</tr>
+                    </table>
+                    <?php else: ?>
+                    <div class="panel-body">
+                        <div class="alert alert-info">Aucun membre favoris</div>
+                    </div>
+                    <?php endif ?>
+                </div>
+                
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><span class="glyphicon glyphicon-thumbs-up"></span> <b>Suivez-Nous</b></h3>                    
+                    </div>
+                    <div class="panel-body">
+                    <div class="row">
+                    <div class="col-md-4">
+                    <div class="fb-like" data-href="https://www.facebook.com/freemeet.net" data-layout="box_count" data-action="like" data-show-faces="false" data-share="false"></div>
+                    </div>
+                    <div class="col-md-4">
+                    <a href="https://twitter.com/share" class="twitter-share-button" data-via="freemeet_france" data-count="vertical">Tweet</a>
+                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+                    </div>
+                    <div class="col-md-4">
+                    <div class="g-plusone" data-size="tall"></div>
+                    </div>
+                    </div>
+                    </div>
+                </div>
+                
+                
+            </div>
+            
+            <div class="col-sm-12 col-md-9 col-lg-7 col-xs-12">
+            
             <?php echo $this->content; ?>
-            <div class="container">
+            
+            </div>
+            
+            <div class="col-sm-4 col-md-2 hidden-sm hidden-md hidden-xs">
+                
+            </div>
+            
+            <?php else: ?>
+            <?php echo $this->content; ?>
+            <?php endif ?>
+            
+        	</div>
+            
             <hr>
             <footer>
                 <div class="row">
-                <div class="col-sm-6">
-                <p>&copy; 2009 - <?php echo date('Y') ?> Freemeet.net <?php echo $this->translate('All rights reserved.') ?></p>
+                <div class="col-sm-6 hidden-xs">
+                <p>&copy; 2009 - <?php echo date('Y') ?> Freemeet.net <span class="hidden-xs"><?php echo $this->translate('All rights reserved.') ?></span></p>
             	</div>
             	<div class="col-sm-6 text-right">
-            	<p><a href="http://blog.freemeet.net" target="_blank">Blog</a> | <a href="/contact">Contactez-nous</a> | <a href="">Mentions légales</a></p>
+            	<p><a href="">Blog</a> | <a href="">Mentions légales</a></p>
             	</div>
             	</div>
             </footer>
         </div> <!-- /container -->
-        <?php echo $this->inlineScript() ?>
         <!-- Modal -->
-        <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Inscription réussie !</h4>
-              </div>
-              <div class="modal-body">
-              Un email de confirmation vient de vous êtres envoyé, cliquez sur le lien dans l'email pour activer votre compte.
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        
+        <?php echo $this->inlineScript() ?>
     </body>
 </html>

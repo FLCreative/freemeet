@@ -22,6 +22,10 @@ use Zend\Mvc\Application;
 use Application\Model\UserBlacklistMapper;
 use Application\Model\ProfilQuestionCategoryMapper;
 use Application\Model\ProfilQuestionMapper;
+use Zend\Db\TableGateway\TableGateway;
+use Zend\Session\SaveHandler\DbTableGateway;
+use Zend\Session\SaveHandler\DbTableGatewayOptions;
+use Zend\Session\SessionManager;
 
 class Module
 {
@@ -38,10 +42,22 @@ protected $whitelist = array('login','register','authenticate','home');
         $mapper = $sm->get('UserMapper');
         $statusMapper = $sm->get('MessageStatusMapper');
 
+        $adapter = $sm->get('Zend\Db\Adapter\Adapter');
+         
+        $tableGateway = new TableGateway('session', $adapter);
+        $saveHandler  = new DbTableGateway($tableGateway, new DbTableGatewayOptions());
+        $manager      = new SessionManager();
+        $manager->setSaveHandler($saveHandler);
+        
+        $manager->start();
+        
+        
         $em->attach(MvcEvent::EVENT_ROUTE, function($e) use ($list, $auth, $mapper, $statusMapper, $sm) 
         {
            
-            $match = $e->getRouteMatch();
+        	$sm->setService('userStats',null);
+            
+        	$match = $e->getRouteMatch();
 
             // No route match, this is a 404
             if (!$match instanceof RouteMatch) {
@@ -57,7 +73,7 @@ protected $whitelist = array('login','register','authenticate','home');
            // User is authenticated
             if ($auth->hasIdentity()) {
                 
-                $user = $mapper->find($auth->getIdentity()->user_id);               
+                $user = $mapper->find($auth->getIdentity()->user_id);
                 
                 if($user != null)
                 {   
@@ -96,6 +112,7 @@ protected $whitelist = array('login','register','authenticate','home');
                             return $response;
                         }
                         
+
                         return;
                     }
                     else
@@ -138,6 +155,16 @@ protected $whitelist = array('login','register','authenticate','home');
             }
         }, 100);
         
+    }
+    
+    public function initSession($config)
+    {
+    	$adapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
+    	
+    	$tableGateway = new TableGateway('session', $adapter);
+    	$saveHandler  = new DbTableGateway($tableGateway, new DbTableGatewayOptions());
+    	$manager      = new SessionManager();
+    	$manager->setSaveHandler($saveHandler);
     }
     
     public function getConfig()
@@ -235,6 +262,48 @@ protected $whitelist = array('login','register','authenticate','home');
     					    $auth->setAdapter($adapter);
     					
     					    return $auth;
+    					},
+    					
+    					'Zend\Session\SessionManager' => function ($sm) {
+    						$config = $sm->get('config');
+    						if (isset($config['session'])) {
+    							$session = $config['session'];
+    					
+    							$sessionConfig = null;
+    							if (isset($session['config'])) {
+    								$class = isset($session['config']['class'])  ? $session['config']['class'] : 'Zend\Session\Config\SessionConfig';
+    								$options = isset($session['config']['options']) ? $session['config']['options'] : array();
+    								$sessionConfig = new $class();
+    								$sessionConfig->setOptions($options);
+    							}
+    					
+    							$sessionStorage = null;
+    							if (isset($session['storage'])) {
+    								$class = $session['storage'];
+    								$sessionStorage = new $class();
+    							}
+    					
+    							$sessionSaveHandler = null;
+    							if (isset($session['save_handler'])) {
+    								// class should be fetched from service manager since it will require constructor arguments
+    								$sessionSaveHandler = $sm->get($session['save_handler']);
+    							}
+    					
+    							$sessionManager = new SessionManager($sessionConfig, $sessionStorage, $sessionSaveHandler);
+    					
+    							if (isset($session['validators'])) {
+    								$chain = $sessionManager->getValidatorChain();
+    								foreach ($session['validators'] as $validator) {
+    									$validator = new $validator();
+    									$chain->attach('session.validate', array($validator, 'isValid'));
+    					
+    								}
+    							}
+    						} else {
+    							$sessionManager = new SessionManager();
+    						}
+    						Container::setDefaultManager($sessionManager);
+    						return $sessionManager;
     					},
     			),
     			

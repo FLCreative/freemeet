@@ -10,10 +10,12 @@
 namespace Login\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Authentication\AuthenticationService;
-use Zend\Authentication\Adapter\DbTable as AuthAdapter;
 use Login\Form\LoginForm;
 use Zend\Db\Sql\Expression;
+use Zend\Db\TableGateway\TableGateway;
+use Zend\Session\SaveHandler\DbTableGateway;
+use Zend\Session\SaveHandler\DbTableGatewayOptions;
+use Zend\Session\SessionManager;
 
 class LoginController extends AbstractActionController
 {
@@ -69,7 +71,7 @@ class LoginController extends AbstractActionController
             
             $storage = $auth->getStorage();
             
-            $storage->write($infos);
+            $storage->write($infos);           
             
             // Update last login time
             $userMapper = $this->getServiceLocator()->get('userMapper');
