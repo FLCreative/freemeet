@@ -58,6 +58,16 @@ return array(
                             ),
                         ),
                     ),
+                		
+                	'update-chatbox-status' => array(
+                		'type'    => 'Literal',
+                		'options' => array(
+                			'route'    => '/update-chatbox-status',
+                			'defaults' => array(
+                			'action' => 'updateChatboxStatus',
+                			),
+                		),
+                	),
                     
                     'reply' => array(
                         'type'    => 'Literal',

@@ -21,6 +21,7 @@
         <?php echo $this->headScript()->prependFile($this->basePath() . '/js/html5.js', 'text/javascript', array('conditional' => 'lt IE 9',))
                                       ->prependFile($this->basePath() . '/js/application.js')
                                       ->prependFile($this->basePath() . '/js/jquery.slimscroll.min.js')
+                                      ->prependFile($this->basePath() . '/js/ion.sound.min.js')
                                       ->prependFile($this->basePath() . '/js/jquery.toaster.js')
                                       ->prependFile($this->basePath() . '/js/moment.js')
                                       ->prependFile($this->basePath() . '/js/fileinput.js')
@@ -189,21 +190,13 @@
             <?php echo $this->content; ?>
             <?php endif ?>
             
-        	</div>
-            
-            <hr>
-            <footer>
-                <div class="row">
-                <div class="col-sm-6 hidden-xs">
-                <p>&copy; 2009 - <?php echo date('Y') ?> Freemeet.net <span class="hidden-xs"><?php echo $this->translate('All rights reserved.') ?></span></p>
-            	</div>
-            	<div class="col-sm-6 text-right">
-            	<p><a href="">Blog</a> | <a href="">Mentions légales</a></p>
-            	</div>
-            	</div>
-            </footer>
+        	</div>            
         </div> <!-- /container -->
-        <!-- Modal -->
+        <?php 
+        	$chatBox = $this->ChatBox(); 
+        	echo $chatBox->render();
+        ?>
+        <!-- ChatBoxes -->
         <?php echo $this->inlineScript() ?>
     </body>
 </html>

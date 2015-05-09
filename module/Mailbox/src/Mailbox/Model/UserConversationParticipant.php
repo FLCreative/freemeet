@@ -6,6 +6,7 @@
     protected $id;
     protected $conversation;
     protected $chatboxStatus;
+    protected $username;
 
 	public function getId()
     {
@@ -36,6 +37,15 @@
     {
         $this->chatboxStatus = $chatboxStatus;
     }
+	
+	public function getUsername() {
+		return $this->username;
+	}
+
+	public function setUsername($username) {
+		$this->username = $username;
+	}
+
 
 
  }

@@ -19,7 +19,6 @@ use Mailbox\Model\UserMessageStatus;
 use Mailbox\Form\AddConversationForm;
 use Mailbox\Form\ReplyConversationForm;
 use Zend\View\Model\JsonModel;
-
 use ElephantIO\Client;
 use ElephantIO\Engine\SocketIO\Version1X;
 
@@ -29,7 +28,7 @@ class MailboxController extends AbstractActionController
     {
     	$this->layout()->fullLayout = true;
     	
-    	$form = new ReplyConversationForm();
+    	$form = new ReplyConversationForm('reply_conversation');
     	
     	$mapper = $this->getServiceLocator()->get('ConversationMapper');
         $results = $mapper->fetchAll(array('owner' => $this->identity()->user_id));
@@ -56,7 +55,9 @@ class MailboxController extends AbstractActionController
 		        }
 		         
 		        $messages = $messageMapper->fetchAll(array('conversation'=>$conversation->getId(),'owner'=>$this->identity()->user_id));
-		         		         
+
+		        $currentConversation = $conversation;
+		        
 		        $form->get('conversation')->setValue($conversation->getId());
 	        	
 		        $conversations[] = $conversation;
@@ -65,6 +66,7 @@ class MailboxController extends AbstractActionController
         
         return array(
             'conversations'=> $conversations,
+        	'conversation' => $currentConversation,
         	'messages'	   => $messages,
         	'form'		   => $form
         );
@@ -190,6 +192,10 @@ class MailboxController extends AbstractActionController
                 
                         $receiver = $mapper->findReceiver($conversation->getId(), $this->identity()->user_id);
                         
+                        $userMapper = $sm->get('userMapper');
+                        
+                        $user = $userMapper->find($receiver->getId());
+                        
                         $db = $sm->get('Zend\Db\Adapter\Adapter');
                 
                         $con = $db->getDriver()->getConnection();
@@ -222,19 +228,37 @@ class MailboxController extends AbstractActionController
                             $status->setValue('unread');
                 
                             $statusMapper->save($status);
-                
+                			
+                            //
+                            
+                            $currentUser = $sm->get('currentuser');
+                            
                             $con->commit();
                             
-                            $client = new Client(new Version1X('http://localhost:3000'));
-                            $client->initialize();
-                            $client->emit('broadcast', array('foo' => 'bar'));
-                            $client->close();                                                       
+				            $client = new Client(new Version1X('http://localhost:3000'));
+				            $client->initialize();
+                            
+
+                            $client->emit('new message', 
+                            		array(
+                            		'conversation' => $conversation->getId(),
+                            		'sender'  	   => $currentUser->getName(),
+                            		'receiver'     => $user->getName(),
+                            		'photo'        => $user->getPhoto('xsmall'),
+                            		'content'      => nl2br($message->getContent())
+                            	)
+                            );                        
                             
                             if($this->getRequest()->isXmlHttpRequest())
-                            {
-                                $user = $sm->get('currentuser');
-                                
-                                return new JsonModel(array('status'=>'success','date'=>'à l\'instant','message'=>nl2br($message->getContent()),'photo'=>$user->getPhoto('small')));
+                            {                                                               
+                                return new JsonModel(
+                                		array(
+                                		'status'       => 'success',
+                                		'date'         => 'à l\'instant',
+                                		'message'      => nl2br($message->getContent()),
+                                	    'conversation' => $conversation->getId(),
+                                		'photo'        => $currentUser->getPhoto('small'))
+                                );
                             }
                 
                             $this->flashMessenger()->setNamespace('success')->addMessage('Votre message a été envoyé !');
@@ -438,4 +462,31 @@ class MailboxController extends AbstractActionController
        return $this->redirect()->toRoute('mailbox');             
        
     }
+    
+    public function updateChatboxStatusAction()
+    {
+    	$data = $this->getRequest()->getPost();
+    	 
+    	$conversationMapper = $this->getServiceLocator()->get('ConversationMapper');
+    	$conversation = $conversationMapper->find($data['conversation']);
+    
+    	if($conversation)
+    	{
+    		$mapper = $this->getServiceLocator()->get('ParticipantMapper');
+    		$participant = $mapper->find($conversation->getId(), $this->identity()->user_id);
+    
+    		if($participant)
+    		{
+    			$status = array(); 
+    			
+    			$participant->setChatboxStatus($data['status']);
+    			
+    			$mapper->update($participant);
+    			
+    			return new JsonModel();
+    		}
+    	}    	 
+    	 
+    }
+    
 }

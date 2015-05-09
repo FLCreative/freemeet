@@ -1,4 +1,5 @@
 ConversationMapper=Mailbox\\Model\\UserConversationMapper
+ParticipantMapper=Mailbox\\Model\\UserConversationParticipantMapper
 QuestionCategoryMapper=Application\\Model\\ProfilQuestionCategoryMapper
 QuestionMapper=Application\\Model\\ProfilQuestionMapper
 eclipse.preferences.version=1

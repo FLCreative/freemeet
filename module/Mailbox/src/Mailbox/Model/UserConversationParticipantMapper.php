@@ -6,7 +6,10 @@
  use Zend\Db\Sql\Sql;
  use Zend\Db\ResultSet\HydratingResultSet;
  use Zend\Stdlib\Hydrator\NamingStrategy\FirstUnderscoreNamingStrategy;
+ use Zend\Stdlib\Hydrator\Filter\MethodMatchFilter;
+ use Zend\Stdlib\Hydrator\Filter\FilterComposite;
  use Mailbox\Model\UserConversationParticipant;
+
  
  class UserConversationParticipantMapper
  {
@@ -47,6 +50,12 @@
          $hydrator = new ClassMethods();
           
          $hydrator->setNamingStrategy(new FirstUnderscoreNamingStrategy);
+         
+         $hydrator->addFilter(
+         		"Username",
+         		new MethodMatchFilter("getUsername"),
+         		FilterComposite::CONDITION_AND
+         );
           
          $hydratedData = $hydrator->extract($participant);
           
@@ -67,6 +76,35 @@
          return $result;
      }
      
+     public function update(UserConversationParticipant $participant)
+     {
+     	$hydrator = new ClassMethods();
+     
+     	$hydrator->setNamingStrategy(new FirstUnderscoreNamingStrategy);
+     
+     	$hydratedData = $hydrator->extract($participant);
+     
+     	$data = array();
+     
+     	foreach ($hydratedData as $key => $value)
+     	{
+     		$data['participant_'.$key] = $value;
+     	}
+     
+     	// insert action
+     	$action = $this->sql->update();
+     	$action->set($data);
+     	$action->where(array(
+     			'participant_id'           => $participant->getId(),
+     			'participant_conversation' => $participant->getConversation())
+     	);
+     	 
+     	$statement = $this->sql->prepareStatementForSqlObject($action);
+     	$result = $statement->execute();
+     	 
+     	return $result;
+     }
+     
      public function delete(UserConversationParticipant $participant)
      {
          $delete = $this->sql->delete();
@@ -80,7 +118,7 @@
      {
          $select = $this->sql->select();
          $select->where(array('participant_id != ?' => $user, 'participant_conversation' => $conversation));
-         $select->join('users','user_id = participant_id', array());
+         $select->join('users','user_id = participant_id', array('participant_username'=>'user_name'));
          
          $statement = $this->sql->prepareStatementForSqlObject($select);
          $result = $statement->execute()->current();
@@ -102,16 +140,25 @@
      {
          $select = $this->sql->select();
          
-         if(isset($params['owner']))
+         if(isset($params['status']))
          {
-             $select->where(array('photo_owner = ?'=>$params['owner']));
+            if(is_array($params['status']))
+            { 
+            	$select->where->in('participant_chatbox_status',$params['status']);
+            }
+            else
+            {
+            	$select->where(array('participant_chatbox_status = ?' => $params['status']));
+            }
          }
-         if(isset($params['type']))
+
+         if(isset($params['participant']))
          {
-             $select->where(array('photo_type = ?'=>$params['type']));
-         }               
+         	$select->where(array('participant_id = ?' => $params['participant']));
+         }
 
          $statement = $this->sql->prepareStatementForSqlObject($select);
+         
          $results = $statement->execute();
 
          $entityPrototype = new UserConversationParticipant();

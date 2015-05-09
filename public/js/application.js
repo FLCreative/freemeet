@@ -232,41 +232,7 @@ jQuery(document).ready(function() {
 
 			
 	}
-	
-	$("#reply_conversation").on("click",function(e){
-		e.preventDefault();
-		var element = $(this);
-		var form = $(this).closest('form');
-		$.post(form.attr('action'), form.serialize(), function(r){
-			if(r.status == 'success')
-			{				
-				var row = $("<li>").attr('class','right');
-				var date = $("<span>").attr('class','date-time').text(r.date);
-				var username = $("<a>").attr('class','name').text('Vous');
-				var photoLink = $("<a>").attr('class','image')
-				                        .attr('href','#');
-				
-				var photo = $("<img>").attr('src',r.photo);
-				var message = $("<div>").attr('class','message').html(r.message);
-				
-				photoLink.append(photo);
-				
-				$("ul.chats").append(row.append(date)
-							            .append(username)
-							            .append(photoLink)
-							            .append(message));
-				
-				element.empty();
-				
-			}
-			else
-			{
-				$.toaster({ priority : 'danger', title : '<span class="glyphicon glyphicon-remove"></span>', message : r.message });
-			}
-
-		});
-	});
-	
+		
 	var test = $("input[id=add_photo]").fileinput({
 		allowedFileTypes: ["image"],
 	    allowedFileExtensions: ["jpg", "png"],

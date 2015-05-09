@@ -14,6 +14,7 @@ use Application\Model\UserPhotoMapper;
 use Account\Form\EditPasswordForm;
 use Zend\View\Model\JsonModel;
 
+
 class AccountController extends AbstractActionController
 {   
     public function indexAction()

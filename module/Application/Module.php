@@ -26,6 +26,7 @@ use Zend\Db\TableGateway\TableGateway;
 use Zend\Session\SaveHandler\DbTableGateway;
 use Zend\Session\SaveHandler\DbTableGatewayOptions;
 use Zend\Session\SessionManager;
+use Zend\Session\Container;
 
 class Module
 {
@@ -112,6 +113,48 @@ protected $whitelist = array('login','register','authenticate','home');
                             return $response;
                         }
                         
+                        $messageMapper = $sm->get('MessageMapper');
+                        $participantMapper = $sm->get('ParticipantMapper');
+                        
+                        
+                        $params = array(
+                        		'participant' => $user->getId(),
+                        		'status'      => array('open','hidden')
+                        );
+                        
+                        $conversations = array();
+                        
+                        foreach ($participantMapper->fetchAll($params) as $conversation)
+                        {
+                        	$messages = array();
+                        	
+                            $params = array(
+                        		'conversation' => $conversation->getConversation(),
+                        		'owner'        => $user->getId(),
+                            	'order'		   => 'DESC',
+                            	'limit'		   => 15,
+                        	);
+                        	
+                        	foreach($messageMapper->fetchAll($params) as $message)
+                        	{
+                        		$messages[] = array(
+                        			'author'  => $message->getAuthor(),
+                        			'content' => $message->getContent(),
+                        			'date'	  => $message->getDate()
+                        		);
+                        	}
+                        	
+                        	$receiver = $participantMapper->findReceiver($conversation->getConversation(), $user->getId());
+                        	
+                        	$conversations[] = array(
+                        			'id' => $conversation->getConversation(),
+                        			'username' => $receiver->getUsername(),
+                        			'messages' => array_reverse($messages)
+                        	);
+                        }
+                        
+                        $container = new Container('ChatBoxes');
+                        $container->item = $conversations;
 
                         return;
                     }
@@ -263,48 +306,7 @@ protected $whitelist = array('login','register','authenticate','home');
     					
     					    return $auth;
     					},
-    					
-    					'Zend\Session\SessionManager' => function ($sm) {
-    						$config = $sm->get('config');
-    						if (isset($config['session'])) {
-    							$session = $config['session'];
-    					
-    							$sessionConfig = null;
-    							if (isset($session['config'])) {
-    								$class = isset($session['config']['class'])  ? $session['config']['class'] : 'Zend\Session\Config\SessionConfig';
-    								$options = isset($session['config']['options']) ? $session['config']['options'] : array();
-    								$sessionConfig = new $class();
-    								$sessionConfig->setOptions($options);
-    							}
-    					
-    							$sessionStorage = null;
-    							if (isset($session['storage'])) {
-    								$class = $session['storage'];
-    								$sessionStorage = new $class();
-    							}
-    					
-    							$sessionSaveHandler = null;
-    							if (isset($session['save_handler'])) {
-    								// class should be fetched from service manager since it will require constructor arguments
-    								$sessionSaveHandler = $sm->get($session['save_handler']);
-    							}
-    					
-    							$sessionManager = new SessionManager($sessionConfig, $sessionStorage, $sessionSaveHandler);
-    					
-    							if (isset($session['validators'])) {
-    								$chain = $sessionManager->getValidatorChain();
-    								foreach ($session['validators'] as $validator) {
-    									$validator = new $validator();
-    									$chain->attach('session.validate', array($validator, 'isValid'));
-    					
-    								}
-    							}
-    						} else {
-    							$sessionManager = new SessionManager();
-    						}
-    						Container::setDefaultManager($sessionManager);
-    						return $sessionManager;
-    					},
+
     			),
     			
     			

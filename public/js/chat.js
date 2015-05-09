@@ -1,4 +1,5 @@
 $(function() {
+  
   var FADE_TIME = 150; // ms
   var TYPING_TIMER_LENGTH = 400; // ms
   var COLORS = [
@@ -6,6 +7,18 @@ $(function() {
     '#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
     '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
   ];
+  
+  ion.sound({
+	    sounds: [
+	        {name: "notify"},
+	    ],
+
+	    // main config
+	    path: "/sounds/",
+	    preload: true,
+	    multiplay: true,
+	    volume: 0.9
+	});
   
   
   // Initialize varibles
@@ -16,8 +29,10 @@ $(function() {
   var typing = false;
   var lastTypingTime;
 
-  var socket = io.connect('http://localhost:3000');
-
+  var socket = io.connect('http://freemeet.local:3000');
+  
+  socket.emit('connect user', $("#user_name").text());
+  
   function addParticipantsMessage (data) {
     var message = '';
     if (data.numUsers === 1) {
@@ -28,30 +43,50 @@ $(function() {
     console.log(message);
   }
 
-  // Sets the client's username
-  function setUsername () {
-      // Tell the server your username
-      socket.emit('add user', $('#user_name').text());
-  }
-
   // Sends a chat message
-  function sendMessage ($chatBox) {	  
+  function sendMessage (element) {	  
 
-	$inputMessage =  $('input',$chatBox); 
-    var $message = $inputMessage.val();
-    var $receiver = $chatBox.attr('data-username');
-    // Prevent markup from being injected into the message
-    $message = cleanInput($message);
-    // if there is a non-empty message and a socket connection
-    if ($message && connected) {
-      $inputMessage.val('');   
-      
-      var data = {"receiver": $receiver, "message": $message};
-      
-      addChatMessage(data);
-      // tell server to execute 'new message' and send along one parameter
-      socket.emit('new message', data);
-    }
+	var form = element.closest('form');
+	
+	$.post(form.attr('action'), form.serialize(), function(r){
+		if(r.status == 'success')
+		{				
+			var row = $("<li>").attr('class','right');
+			var date = $("<span>").attr('class','date-time').text(r.date);
+			var username = $("<a>").attr('class','name').text('Vous');
+			var photoLink = $("<a>").attr('class','image')
+			                        .attr('href','#');
+			
+			var photo = $("<img>").attr('src',r.photo);
+			var message = $("<div>").attr('class','message').html(r.message);
+			
+			photoLink.append(photo);
+			$("#mainChat ul.chats[data-id="+r.conversation+"]").append(row.append(date)
+						                                       .append(username)
+						                                       .append(photoLink)
+						                                       .append(message));
+			
+			var row = $("<li>").attr('class','right');
+			var message = $("<div>").attr('class','message').html(r.message);
+			
+			var chats = $("div.panel-chat ul.chats[data-id="+r.conversation+"]");
+			
+			var chatbox = chats.closest('div.panel-chat');
+			
+			chats.append(row
+                 .append(message));
+			
+			$('textarea', form).val('');
+			
+			$('div.panel-body',chatbox).scrollTop(chats.height());
+									
+		}
+		else
+		{
+			$.toaster({ priority : 'danger', title : '<span class="glyphicon glyphicon-remove"></span>', message : r.message });
+		}
+
+	});
   }
 
   // Log a message
@@ -70,26 +105,16 @@ $(function() {
       $typingMessages.remove();
     }
    
-    if (typeof data.receiver === 'undefined') {    	
-    	$messageDiv = $('div.panel-chat[data-username='+data.username+']');
+    $messageDiv = $('div.panel-chat[data-username='+data.sender+']');
     	
-    	
-    	
-    	if(!$messageDiv.length)
-        {
-        	$messageDiv = makeChatBox(data.username);
-        	$('body').append($messageDiv);
-        }
-    }
-    else
-    {
-    	$messageDiv = $('div.panel-chat[data-username='+data.receiver+']');
-    	
-    }
-     
-    console.log(data);
 
-    addMessageElement($('div.panel-body',$messageDiv), data.message, options); 
+    if(!$messageDiv.length)
+    {
+        $messageDiv = makeChatBox(data.sender, data.conversation);
+        $('body').append($messageDiv);
+    }
+
+    addMessageElement($('div.panel-body ul',$messageDiv), data, options); 
   
   }
 
@@ -112,8 +137,11 @@ $(function() {
   // options.fade - If the element should fade-in (default = true)
   // options.prepend - If the element should prepend
   //   all other messages (default = false)
-  function addMessageElement (el, message, options) {
-    var $message = $('<li>').text(message);
+  function addMessageElement (el, data, options) {
+    
+	var photo = $('<a class="image" href="#">').append($('<img width="35px" height="35px">').attr('src',data.photo));  
+	
+	var $message = $('<li class="left">').append(photo).append($('<div class="message">').text(data.content));
     // Setup default options
     if (!options) {
       options = {};
@@ -136,6 +164,8 @@ $(function() {
     }
 
     el.scrollTop = el.scrollHeight;
+    
+    ion.sound.play("notify");
     
   }
 
@@ -183,9 +213,9 @@ $(function() {
     return COLORS[index];
   }
   
-  function makeChatBox(username)
+  function makeChatBox(username, conversation)
   {
-	  var $chatBox = $('<div>').addClass('panel panel-default panel-chat');
+	  var $chatBox = $('<div>').addClass('panel panel-primary panel-chat');
 	  var $heading = $('<div>').addClass('panel-heading');
 	  var $title = $('<h3>').addClass('panel-title');
 	  var $body = $('<div>').addClass('panel-body');
@@ -198,11 +228,15 @@ $(function() {
 	  $heading.append($closeButton)
 	          .append($title);
 	  
-	  var $input = $('<div>').addClass('input-group')
-	                         .append($('<input type="text" placeholder="Enter your message here." name="message" class="form-control input-sm">'))
-	                         .append($('<span class="input-group-btn"><button type="button" class="btn btn-primary btn-sm">Send</button></span>'));
+	  $body.append($('<ul class="chats" data-id="'+conversation+'">'));
 	  
-	  $footer.append($input);
+	  var $form = $('<form method="POST" name="reply_conversation" action="/mailbox/reply">');
+	  
+	  var $input = $('<div>').append($('<input type="hidden" name="conversation" value="'+conversation+'" class="form-control input-sm">'))
+	                         .append($('<textarea name="content" class="form-control input-sm">'));
+	  $form.append($input);
+	  
+	  $footer.append($form);
 	  
 	  $chatBox.append($heading)
 	          .append($body)
@@ -212,9 +246,7 @@ $(function() {
 	  
 	  $chatboxes.push($chatBox);
 	  
-	  addKeybordEvents($chatBox);
-	  
-	  
+	  addKeybordEvents($input);	  
 	  
 	  if($('div.panel-chat').length)
 	  {		  
@@ -227,21 +259,40 @@ $(function() {
 	  $closeButton.click(function(){closeChatBox($chatBox);});
 	  $heading.click(function(){toggleChatBox($chatBox);});
 	  
+	  $.post('/mailbox/update-chatbox-status', {conversation: conversation, status: "open"});
+	  
 	  return $chatBox;
   }
 
   // Keyboard events
   function addKeybordEvents(el)
   {
-	  el.keydown(function (event) {
-	    // When the client hits ENTER on their keyboard
-	    if (event.which === 13) {
-	      sendMessage(el);
-	      socket.emit('stop typing');
-	      typing = false;
+	  el.keydown(function (event) {		
+		// When the client hits ENTER on their keyboard
+	    if (event.which === 13) {	          	
+	    	sendMessage(el);
+	        socket.emit('stop typing');
+	        typing = false;
+	        
+	        event.preventDefault();
+	        return false;
 	    }
 	  });
   }
+  
+  // Button event
+  $('form#reply_conversation input[type=submit]').on('click', function(e) {	  	  
+	  sendMessage($(this));
+      socket.emit('stop typing');
+      typing = false;
+  });
+  
+  // Form submit event
+  
+  $(document).on('submit','form[name="reply_conversation"]', function(e)
+  {
+	  e.preventDefault();
+  });
   
   function closeChatBox(chatBox)
   {
@@ -279,16 +330,15 @@ $(function() {
   
   function toggleChatBox(chatBox)
   {
+	  chatBox.toggleClass( "panel-primary");
+	  
 	  $('div.panel-body, div.panel-footer', chatBox).toggle();
   }
 
   $('div.chatbox input').on('input', function() {
-    updateTyping();
+	  updateTyping();
   });
   
-  setUsername();
-  
-
 
   // Click events
   
@@ -296,14 +346,42 @@ $(function() {
 	  $chatBox = makeChatBox($(this).attr('data-username'));
 	  
   });
+  
+  $('div.panel-chat').each(function(index) {
+	  
+	  var $chatBox = $(this);
+	  
+	  // Add events to opened chat box
+	  
+	  $('div.panel-heading button',$chatBox).click(function(){closeChatBox($chatBox);});
+	  $('div.panel-heading',$chatBox).click(function(){toggleChatBox($chatBox);});
+	  
+	  addKeybordEvents($('textarea',$chatBox));
+	  
+	  // Move all boxes
+
+	  if(index > 0)
+	  {
+		  positions = $chatBox.prev().position();
+		  $chatBox.css('left',positions.left - ($('div.panel-chat').width() + 10));
+	  }
+	  
+	  var $body = $('div.panel-body',$chatBox);
+	  
+	  $body.scrollTop( $('div.panel-body ul',$chatBox).height());
+		  			  
+  });
+  
+
+  
+  
 
   // Socket events
 
   // Whenever the server emits 'login', log the login message
-  socket.on('login', function (data) {
+  socket.on('login', function () {
     connected = true;
-    
-    addParticipantsMessage(data);
+    console.log('connected');
   });
 
   // Whenever the server emits 'new message', update the chat body

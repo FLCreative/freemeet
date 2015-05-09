@@ -147,6 +147,16 @@
          {
              $select->where(array('status_user_id = ?' => $params['owner']));
          }
+
+         if(isset($params['order']))
+         {
+         	$select->order('message_id '.$params['order']);
+         }
+         
+         if(isset($params['limit']))
+         {
+         	$select->limit($params['limit']);
+         }
          
          $select->where(array('status_value != ?' => 'deleted'));
          
@@ -155,9 +165,7 @@
          
          $expression = new Expression('photo_owner = user_id AND photo_type ="main" AND photo_status = "validated"');
          $select->join(array('p'=>'users_photos'),$expression,array('message_photo'=>'photo_filename'),'left');
-         
-         $select->order('message_id');
-         
+
          $statement = $this->sql->prepareStatementForSqlObject($select);
          $results = $statement->execute();
 

@@ -87,6 +87,11 @@ div.row .unread
     margin: 0;
     padding: 12px 15px 15px;
 }
+
+.panel-chat .chats {
+    margin-bottom: 10px;
+}
+
 .chats > li + li {
     margin-top: 15px;
 }
@@ -123,12 +128,23 @@ div.row .unread
     overflow: hidden;
     width: 60px;
 }
+
+.panel-chat .chats .image {
+    height: 35px;
+    width: 35px;
+}
+
 .chats .image img {
     max-width: 100%;
 }
 .chats .image + .message {
     margin-left: 75px;
 }
+
+.panel-chat .chats .image + .message {
+    margin-left: 45px;
+}
+
 .chats .message {
     background: none repeat scroll 0 0 #fff;
     border: 1px solid #ccd0d4;

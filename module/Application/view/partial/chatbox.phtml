@@ -1,0 +1,34 @@
+<div class="panel panel-primary panel-chat" data-username="<?php echo $this->username ?>">
+	
+	<div class="panel-heading">
+		<button aria-label="Close" class="close pull-right" type="button"><span aria-hidden="true">×</span></button>
+		<h3 class="panel-title"><?php echo $this->username ?></h3>
+	</div>
+
+	<div class="panel-body">
+	
+		<ul data-id="<?php echo $this->id ?>" class="chats">
+			<?php foreach ($this->messages as $message): ?>
+			<?php if($this->identity()->user_id == $message['author']): ?>
+			<li class="right">
+				<div class="message"><pre><?php echo $message['content'] ?></pre></div>
+			</li>
+			<?php else: ?>
+			<li class="left">
+				<a href="#" class="image"><img width="35px" height="35px" src="/photos/ec8b893df0566969cf2509672025756c_xsmall.jpeg"></a>
+				<div class="message"><pre><?php echo $message['content'] ?></pre></div>
+			</li>
+			<?php endif ?>
+			<?php endforeach; ?>
+		</ul>
+	</div>
+
+	<div class="panel-footer">
+		<form action="/mailbox/reply" name="reply_conversation" method="POST">
+			<div>
+				<input type="hidden" class="form-control input-sm" value="<?php echo $this->id ?>" name="conversation">
+				<textarea class="form-control input-sm" name="content"></textarea>
+			</div>
+		</form>
+	</div>
+</div>

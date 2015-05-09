@@ -321,7 +321,8 @@ return array(
             'currentuser'      => 'Application\View\Helper\CurrentUser',
             'userstats'        => 'Application\View\Helper\UserStats',
             'relativetime'     => 'Application\View\Helper\RelativeTime',
-            'astrologicalsign' => 'Application\View\Helper\AstrologicalSign'
+            'astrologicalsign' => 'Application\View\Helper\AstrologicalSign',
+            'chatbox'          => 'Application\View\Helper\ChatBox'
         )
     ),
     'module_layouts' => array(
