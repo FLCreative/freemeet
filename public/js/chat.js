@@ -1,13 +1,8 @@
 $(function() {
   
   var FADE_TIME = 150; // ms
-  var TYPING_TIMER_LENGTH = 400; // ms
-  var COLORS = [
-    '#e21400', '#91580f', '#f8a700', '#f78b00',
-    '#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
-    '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
-  ];
-  
+  var TYPING_TIMER_LENGTH = 1000; // ms
+
   ion.sound({
 	    sounds: [
 	        {name: "notify"},
@@ -33,15 +28,6 @@ $(function() {
   
   socket.emit('connect user', $("#user_name").text());
   
-  function addParticipantsMessage (data) {
-    var message = '';
-    if (data.numUsers === 1) {
-      message += "there's 1 participant";
-    } else {
-      message += "there are " + data.numUsers + " participants";
-    }
-    console.log(message);
-  }
 
   // Sends a chat message
   function sendMessage (element) {	  
@@ -89,12 +75,6 @@ $(function() {
 	});
   }
 
-  // Log a message
-  function log (message, options) {
-    var $el = $('<li>').addClass('log').text(message);
-    addMessageElement($el, options);
-  }
-
   // Adds the visual chat message to the message list
   function addChatMessage (data, options) {
     // Don't fade the message in if there is an 'X was typing'
@@ -116,20 +96,6 @@ $(function() {
 
     addMessageElement($('div.panel-body ul',$messageDiv), data, options); 
   
-  }
-
-  // Adds the visual chat typing message
-  function addChatTyping (data) {
-    data.typing = true;
-    data.message = 'is typing';
-    addChatMessage(data);
-  }
-
-  // Removes the visual chat typing message
-  function removeChatTyping (data) {
-    getTypingMessages(data).fadeOut(function () {
-      $(this).remove();
-    });
   }
 
   // Adds a message element to the messages and scrolls to the bottom
@@ -163,7 +129,7 @@ $(function() {
       el.append($message);
     }
 
-    el.scrollTop = el.scrollHeight;
+    scrollChatBox(el.closest('div.panel-chat'));
     
     ion.sound.play("notify");
     
@@ -173,13 +139,43 @@ $(function() {
   function cleanInput (input) {
     return $('<div/>').text(input).text();
   }
+  
+  // Adds the visual chat typing message
+  function addChatTyping (data) {
+	
+	var photo = $('<a class="image" href="#">').append($('<img width="35px" height="35px">').attr('src',data));  
+		
+	var $message = $('<li class="left" id="typing">').append(photo).append($('<div class="message">').text('...'));  
+	
+    $('div.panel-chat[data-username='+data+']').find('ul.chats').append($message);
+    
+    scrollChatBox($('div.panel-chat[data-username='+data+']'));
+
+  }
+
+  // Removes the visual chat typing message
+  function removeChatTyping (data, type) {	  
+	  if(type === 'quick')
+	  {
+		  	getTypingMessages(data).remove();
+		  	
+		  	return;
+      }
+	  
+	  getTypingMessages(data).fadeOut(function () {
+      $(this).remove();
+      
+    });
+  }
 
   // Updates the typing event
-  function updateTyping () {
+  function updateTyping (username) {
     if (connected) {
       if (!typing) {
-        typing = true;
-        socket.emit('typing');
+        
+    	typing = true;
+        console.log(typing);
+    	socket.emit('typing',username);
       }
       lastTypingTime = (new Date()).getTime();
 
@@ -187,8 +183,9 @@ $(function() {
         var typingTimer = (new Date()).getTime();
         var timeDiff = typingTimer - lastTypingTime;
         if (timeDiff >= TYPING_TIMER_LENGTH && typing) {
-          socket.emit('stop typing');
+          socket.emit('stop typing',username);
           typing = false;
+          console.log(typing);
         }
       }, TYPING_TIMER_LENGTH);
     }
@@ -196,21 +193,7 @@ $(function() {
 
   // Gets the 'X is typing' messages of a user
   function getTypingMessages (data) {
-    return $('.typing.message').filter(function (i) {
-      return $(this).data('username') === data.username;
-    });
-  }
-
-  // Gets the color of a username through our hash function
-  function getUsernameColor (username) {
-    // Compute hash code
-    var hash = 7;
-    for (var i = 0; i < username.length; i++) {
-       hash = username.charCodeAt(i) + (hash << 5) - hash;
-    }
-    // Calculate color
-    var index = Math.abs(hash % COLORS.length);
-    return COLORS[index];
+    return  $('div.panel-chat[data-username='+data+']').find('li#typing');
   }
   
   function makeChatBox(username, conversation)
@@ -248,22 +231,32 @@ $(function() {
 	  
 	  addKeybordEvents($input);	  
 	  
-	  if($('div.panel-chat').length)
-	  {		  
-		 var positions = $('div.panel-chat').last().position(); 
-		 $chatBox.css('left',positions.left - ($('div.panel-chat').width() + 10));
-	  }
+	  $.post('/mailbox/load-message',{conversation:conversation}, function() {
 	  
-	  $('body').append($chatBox);
-	  
-	  $closeButton.click(function(){closeChatBox($chatBox);});
-	  $heading.click(function(){toggleChatBox($chatBox);});
-	  
-	  $.post('/mailbox/update-chatbox-status', {conversation: conversation, status: "open"});
-	  
-	  return $chatBox;
+		  if($('div.panel-chat').length)
+		  {		  
+			 var positions = $('div.panel-chat').last().position(); 
+			 $chatBox.css('left',positions.left - ($('div.panel-chat').width() + 10));
+		  }
+		  
+		  $('body').append($chatBox);
+		  
+		  $closeButton.click(function(){closeChatBox($chatBox);});
+		  $heading.click(function(){toggleChatBox($chatBox);});
+		  
+		  $.post('/mailbox/update-chatbox-status', {conversation: conversation, status: "open"});
+		  
+		  return $chatBox;
+	  });
   }
-
+  
+  function scrollChatBox(chatBox)
+  {
+	  var $body = $('div.panel-body',chatBox);
+	  
+	  $body.scrollTop( $('div.panel-body ul',chatBox).height());
+  }
+  
   // Keyboard events
   function addKeybordEvents(el)
   {
@@ -316,13 +309,13 @@ $(function() {
 			  {
 				  positions = $(element).prev().position();
 				  $(element).css('left',positions.left - ($(element).width()+10)); 
-			  }
-			  			  
-			  console.log($(element).css('left'));
+			  }			  			  
 			  	  			  
 		  });
 		  
-		  chatBox.remove();	
+		  chatBox.remove();
+		  
+		  $.post('/mailbox/update-chatbox-status', {conversation: $('input[name=conversation]',chatBox).val(), status: "close"});
 		  	  
 	  }
 	  
@@ -333,10 +326,26 @@ $(function() {
 	  chatBox.toggleClass( "panel-primary");
 	  
 	  $('div.panel-body, div.panel-footer', chatBox).toggle();
+	  
+	  if($('div.panel-body, div.panel-footer', chatBox).is(':visible'))
+	  {
+		  status = 'open';
+	  }
+	  else
+      {
+		  status = 'reduce';
+	  }
+	  
+	  $.post('/mailbox/update-chatbox-status', {conversation: $('input[name=conversation]',chatBox).val(), status: status});
   }
 
-  $('div.chatbox input').on('input', function() {
-	  updateTyping();
+  $('div.panel-chat textarea').on('input', function() {
+	  
+	  $chatBox = $(this).closest('div.panel-chat');
+	  
+	  var username = $chatBox.attr('data-username'); 
+	  
+	  updateTyping(username);
   });
   
 
@@ -386,23 +395,18 @@ $(function() {
 
   // Whenever the server emits 'new message', update the chat body
   socket.on('new message', function (data) {
-	console.log(data);
+	removeChatTyping(data.sender,'quick');
     addChatMessage(data);
   });
 
   // Whenever the server emits 'user joined', log it in the chat body
   socket.on('user joined', function (data) {
     console.log(data.username + ' joined');
-    
-    console.log(data);
-    
-    addParticipantsMessage(data);
   });
 
   // Whenever the server emits 'user left', log it in the chat body
   socket.on('user left', function (data) {
     console.log(data.username + ' left');
-    addParticipantsMessage(data);
     removeChatTyping(data);
   });
 

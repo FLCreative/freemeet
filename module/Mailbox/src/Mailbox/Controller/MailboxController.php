@@ -244,7 +244,7 @@ class MailboxController extends AbstractActionController
                             		'conversation' => $conversation->getId(),
                             		'sender'  	   => $currentUser->getName(),
                             		'receiver'     => $user->getName(),
-                            		'photo'        => $user->getPhoto('xsmall'),
+                            		'photo'        => $currentUser->getPhoto('xsmall'),
                             		'content'      => nl2br($message->getContent())
                             	)
                             );                        
@@ -477,11 +477,14 @@ class MailboxController extends AbstractActionController
     
     		if($participant)
     		{
-    			$status = array(); 
+    			$status = array('open','reduce','close'); 
     			
-    			$participant->setChatboxStatus($data['status']);
-    			
-    			$mapper->update($participant);
+    			if(in_array($data['status'],$status))
+    			{
+	    			$participant->setChatboxStatus($data['status']);
+	    			
+	    			$mapper->update($participant);
+    			}
     			
     			return new JsonModel();
     		}

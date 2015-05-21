@@ -81,6 +81,12 @@
      	$hydrator = new ClassMethods();
      
      	$hydrator->setNamingStrategy(new FirstUnderscoreNamingStrategy);
+     	
+     	$hydrator->addFilter(
+     			"Username",
+     			new MethodMatchFilter("getUsername"),
+     			FilterComposite::CONDITION_AND
+     	);
      
      	$hydratedData = $hydrator->extract($participant);
      

@@ -11,12 +11,12 @@
 			<?php foreach ($this->messages as $message): ?>
 			<?php if($this->identity()->user_id == $message['author']): ?>
 			<li class="right">
-				<div class="message"><pre><?php echo $message['content'] ?></pre></div>
+				<div class="message"><?php echo $message['content'] ?></div>
 			</li>
 			<?php else: ?>
 			<li class="left">
 				<a href="#" class="image"><img width="35px" height="35px" src="/photos/ec8b893df0566969cf2509672025756c_xsmall.jpeg"></a>
-				<div class="message"><pre><?php echo $message['content'] ?></pre></div>
+				<div class="message"><?php echo $message['content'] ?></div>
 			</li>
 			<?php endif ?>
 			<?php endforeach; ?>
