@@ -203,6 +203,7 @@ $(function() {
 	  var $title = $('<h3>').addClass('panel-title');
 	  var $body = $('<div>').addClass('panel-body');
 	  var $footer = $('<div>').addClass('panel-footer');
+	  var $chats = $('<ul class="chats" data-id="'+conversation+'">');
 	  
 	  $title.html(username);
 	  
@@ -211,7 +212,7 @@ $(function() {
 	  $heading.append($closeButton)
 	          .append($title);
 	  
-	  $body.append($('<ul class="chats" data-id="'+conversation+'">'));
+	  $body.append($chats);
 	  
 	  var $form = $('<form method="POST" name="reply_conversation" action="/mailbox/reply">');
 	  
@@ -231,15 +232,19 @@ $(function() {
 	  
 	  addKeybordEvents($input);	  
 	  
-	  $.post('/mailbox/load-message',{conversation:conversation}, function() {
-	  
+	  $.get('/mailbox/load-messages/'+conversation, function(r) {
+		  
+		  $chats.append(r.messages);
+		  
 		  if($('div.panel-chat').length)
 		  {		  
 			 var positions = $('div.panel-chat').last().position(); 
 			 $chatBox.css('left',positions.left - ($('div.panel-chat').width() + 10));
 		  }
 		  
-		  $('body').append($chatBox);
+		  $('div.chatBoxes').append($chatBox);
+		  
+		  scrollChatBox($chatBox);
 		  
 		  $closeButton.click(function(){closeChatBox($chatBox);});
 		  $heading.click(function(){toggleChatBox($chatBox);});
@@ -286,6 +291,40 @@ $(function() {
   {
 	  e.preventDefault();
   });
+  
+  // Resize window events
+  
+  $( window ).resize(function() {
+	  resizeChatBoxes();
+  });
+  
+  function resizeChatBoxes()
+  {
+	  $opened = $("div.panel-chat:visible").length;
+	  
+	  $size = $opened * 260;	  
+	  
+	  if($size > $(window).width())
+	  {
+		  $toRemove = ($size - $(window).width()) / 260 ;
+		  
+		  for (i = 0; i < $toRemove; i++) { 
+		  
+			  $('div.panel-chat:visible').first().hide();
+		  }
+		  
+		  console.log( $toRemove );  
+	  }
+	  else
+	  {
+		  $toDisplay = Math.floor(($(window).width() - $size) / 260) ;
+		  
+		  for (i = 0; i < $toDisplay; i++) { 
+		  
+			  $('div.panel-chat:hidden').first().show();
+		  }
+	  }
+  }
   
   function closeChatBox(chatBox)
   {
@@ -352,7 +391,12 @@ $(function() {
   // Click events
   
   $("[id=chat_with]").on('click', function(e){			  
-	  $chatBox = makeChatBox($(this).attr('data-username'));
+	  
+	  $.get('/mailbox/compose/'+$(this).attr('data-id'), function(r){
+		
+		  makeChatBox(r.username,r.id);
+	  
+	  });
 	  
   });
   

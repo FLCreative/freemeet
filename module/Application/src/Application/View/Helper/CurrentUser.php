@@ -12,6 +12,7 @@ namespace Application\View\Helper;
 use Zend\View\Helper\AbstractHelper;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Session\Container;
 
 /**
  * Helper for returning current user entity
@@ -52,8 +53,7 @@ class currentuser extends AbstractHelper implements ServiceLocatorAwareInterface
     
     public function __invoke()
     {
-        $serviceLocator = $this->getServiceLocator()->getServiceLocator();
-        
-        return $serviceLocator->get('currentuser');
+    	$container = new Container('currentUser');
+    	return $container->item;
     }
 }

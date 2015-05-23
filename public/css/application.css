@@ -2,6 +2,7 @@
 
 body {
 	background: #ebebeb;
+	position: relative;
 }
 
 blockquote {
@@ -62,13 +63,18 @@ div.row .unread
 	font-weight: bold;
 }
 
-.panel-chat {
+.chatBoxes
+{
 	position: fixed;
 	bottom: 0;
-	right: 10px;
-	margin: 0;
+	right: 0;
+}
+
+.panel-chat {
+	margin: 0 10px 0 0;
 	width : 250px;
 	cursor: pointer;
+	float: left;
 }
 
 .panel-chat .panel-body {

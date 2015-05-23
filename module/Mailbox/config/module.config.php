@@ -59,6 +59,19 @@ return array(
                         ),
                     ),
                 		
+                	'load-messages' => array(
+                        'type'    => 'segment',
+                        'options' => array(
+                            'route'    => '/load-messages/:conversation[/]',
+                            'constraints' => array(
+                                'conversation' => '[0-9]+',
+                            ),
+                            'defaults' => array(
+                                'action' => 'loadMessages',
+                            ),
+                        ),
+                	),
+                		             		
                 	'update-chatbox-status' => array(
                 		'type'    => 'Literal',
                 		'options' => array(

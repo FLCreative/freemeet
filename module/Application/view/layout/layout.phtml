@@ -192,11 +192,14 @@
             
         	</div>            
         </div> <!-- /container -->
+        <div class="chatBoxes">
         <?php 
         	$chatBox = $this->ChatBox(); 
         	echo $chatBox->render();
         ?>
         <!-- ChatBoxes -->
+        </div>
+        
         <?php echo $this->inlineScript() ?>
     </body>
 </html>

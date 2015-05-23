@@ -140,7 +140,12 @@ class MailboxController extends AbstractActionController
         
         if(!$user || $user->getStatus() != 'active')
         {
-            $this->flashMessenger()->setNamespace('error')->addMessage('Ce membre n\'existe pas, impossible d\'envoyer un message.');
+        	if ($this->getRequest()->isXmlHttpRequest()) 
+        	{
+        		return new JsonModel(array());
+        	}
+        	
+        	$this->flashMessenger()->setNamespace('error')->addMessage('Ce membre n\'existe pas, impossible d\'envoyer un message.');
             
             return $this->redirect()->toRoute('mailbox');
         }
@@ -153,6 +158,11 @@ class MailboxController extends AbstractActionController
         
         if($conversation)
         {       	
+        	if ($this->getRequest()->isXmlHttpRequest())
+        	{
+        		return new JsonModel(array('username'=>$user->getName(),'id'=>$conversation->getId()));
+        	}
+        	
         	return $this->redirect()->toRoute('mailbox/view', array('id'=>$conversation->getId()));
         }
 
@@ -461,6 +471,37 @@ class MailboxController extends AbstractActionController
        
        return $this->redirect()->toRoute('mailbox');             
        
+    }
+    
+    public function loadMessagesAction()
+    {
+    	$id = $this->params('conversation');
+    
+    	$conversationMapper = $this->getServiceLocator()->get('ConversationMapper');
+    	$conversation = $conversationMapper->find($id);
+    	 
+    	if($conversation)
+    	{
+    		$mapper = $this->getServiceLocator()->get('ParticipantMapper');
+    		$participant = $mapper->find($conversation->getId(), $this->identity()->user_id);
+    		 
+    		if($participant)
+    		{    			 
+    			$messageMapper = $this->getServiceLocator()->get('MessageMapper');    			 
+    			 
+    			$rows = $messageMapper->fetchAll(array('conversation'=>$conversation->getId(),'owner'=>$this->identity()->user_id));    			 
+    			
+    			$partialLooper = $this->getServiceLocator()->get('viewhelpermanager')->get('partialLoop');
+    			
+    			$partialLooper->setObjectKey('message');
+    			
+    			$messages = $partialLooper('partial/chatbox-message.phtml',$rows);
+    			
+    			return new JsonModel(array('messages' => $messages));
+    		}
+    		 
+    	}
+
     }
     
     public function updateChatboxStatusAction()

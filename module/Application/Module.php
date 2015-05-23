@@ -73,14 +73,17 @@ protected $whitelist = array('login','register','authenticate','home');
 
            // User is authenticated
             if ($auth->hasIdentity()) {
-                
+            	            	                
                 $user = $mapper->find($auth->getIdentity()->user_id);
                 
                 if($user != null)
                 {   
                     if($user->getStatus() == 'active')
                     {                       
-                        $sm->setService('currentUser',$user);
+                    	$sm->setService('currentUser',$user);
+                    	
+                    	$container = new Container('currentUser');
+                        $container->item = $user;
                         
                         $stats = array();
                         
