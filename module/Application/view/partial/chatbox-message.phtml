@@ -1,0 +1,10 @@
+<?php if($this->identity()->user_id == $this->message->getAuthor()): ?>
+	<li class="right">
+		<div class="message"><?php echo $this->message->getContent() ?></div>
+	</li>
+	<?php else: ?>
+	<li class="left">
+		<a href="#" class="image"><img width="35px" height="35px" src="/photos/ec8b893df0566969cf2509672025756c_xsmall.jpeg"></a>
+		<div class="message"><?php echo $this->message->getContent() ?></div>
+	</li>
+<?php endif ?>
