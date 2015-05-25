@@ -26,8 +26,18 @@ $(function() {
 
   var socket = io.connect('http://freemeet.local:3000');
   
-  socket.emit('connect user', $("#user_name").text());
+  socket.on('connect', function() {
+	  console.log('connect');
+	  $.get('/account/auth', function(){
+		  socket.emit('connect user', $("#user_name").text());
+	  });
+  });
   
+  socket.on('disconnect', function() {
+	  console.log('disconnected');
+	  $.get('/account/disconnect', function(){
+	  });
+  });  
 
   // Sends a chat message
   function sendMessage (element) {	  

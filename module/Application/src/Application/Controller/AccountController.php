@@ -13,6 +13,9 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Application\Model\UserPhotoMapper;
 use Account\Form\EditPasswordForm;
 use Zend\View\Model\JsonModel;
+use Zend\Session\SessionManager;
+use ElephantIO\Client;
+use ElephantIO\Engine\SocketIO\Version1X;
 
 
 class AccountController extends AbstractActionController
@@ -30,8 +33,28 @@ class AccountController extends AbstractActionController
             'users'     => $mapper->fetchAll(),
             'onlines'   => $mapper->fetchOnline($this->identity()->user_id),
             'actions'   => $actions,
-            'newUsers'  => $mapper->fetchAll(array('status'=>'active','order'=>'user_id DESC','limit'=>2))
+            'newUsers'  => $mapper->fetchAll(array('exclude'=>$this->identity()->user_id,'status'=>'active','order'=>'user_id DESC','limit'=>2))
         );
+    }
+    
+    public function authAction()
+    {
+        $sm = $this->getServiceLocator();
+        $user = $sm->get('currentUser'); 
+        
+        $mapper = $sm->get('UserMapper');
+        
+        $user->setIsOnline('yes');
+        
+        $mapper->save($user);
+        
+        $sessionManager = new SessionManager();
+        
+        $client = new Client(new Version1X('http://localhost:3000'));
+        $client->initialize();
+        $client->emit('add user', array('username' => $user->getName(), 'session' => $sessionManager->getId()));
+        
+        return new JsonModel();
     }
     
     public function completeAction()
@@ -152,7 +175,9 @@ class AccountController extends AbstractActionController
     
     public function logoutAction()
     {
-    	$this->getServiceLocator()->get('AuthService')->clearIdentity();
+    	
+        
+        $this->getServiceLocator()->get('AuthService')->clearIdentity();
     	
     	return $this->redirect()->toRoute('home');
     }

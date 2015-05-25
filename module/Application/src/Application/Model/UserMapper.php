@@ -142,8 +142,8 @@
      {
          $select = $this->sql->select();
          
-         $select->where('user_last_action > SUBDATE(NOW(), INTERVAL ? MINUTE)','5')
-                ->where(array('user_id != ?' ,$id));
+         $select->where(array('user_is_online'=>'yes'))
+                ->where(array('user_id != ?'=>$id));
      
          $statement = $this->sql->prepareStatementForSqlObject($select);
          $results = $statement->execute();
@@ -313,6 +313,11 @@
          if(isset($params['limit']))
          {
              $select->limit($params['limit']);
+         }
+         
+         if(isset($params['exclude']))
+         {
+             $select->where(array('user_id != ?'=>$params['exclude']));
          }
 
          $statement = $this->sql->prepareStatementForSqlObject($select);

@@ -28,6 +28,8 @@
     protected $mail_message;
     protected $mail_contact;
     protected $status;
+    protected $isOnline;
+    
     protected $photo;
 
     protected $city_name;
@@ -394,6 +396,16 @@
     
         return $this->inputFilter;
     }
+ public function getIsOnline()
+    {
+        return $this->isOnline;
+    }
+
+ public function setIsOnline($isOnline)
+    {
+        $this->isOnline = $isOnline;
+    }
+
 
 
 

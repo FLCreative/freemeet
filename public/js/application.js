@@ -179,7 +179,7 @@ jQuery(document).ready(function() {
 			console.log(r);
 			if(r.status == 'success')
 			{				
-				$.toaster({ priority : 'success', message : 'Votre mot de passe a bien été modifié' });
+				$.toaster({ priority : 'success', message : 'a été ajouté à vos favoris' });
 			}
 			else
 			{

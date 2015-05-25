@@ -82,19 +82,7 @@ class LoginController extends AbstractActionController
             $user->setLastLogin(new Expression('UTC_TIME()'));
             
             $userMapper->save($user);
-            
-            $sessionManager = new SessionManager();
-                     
-            
-            $client = new Client(new Version1X('http://localhost:3000'));
-            $client->initialize();
-            $client->emit('add user', array('username' => $user->getName(), 'session' => $sessionManager->getId()));
-            
-            $container = new Container('user');
-            $container->socket = $client;
-            
-
-            
+                                
             return $this->redirect()->toRoute('account');  
         }
         

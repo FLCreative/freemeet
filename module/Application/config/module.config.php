@@ -71,7 +71,15 @@ return array(
             				// as you solidify the routes for your module, however,
             				// you may want to remove it and replace it with more
             				// specific routes.
-            
+                		    'auth' => array(
+                		        'type'    => 'Literal',
+                		        'options' => array(
+                		            'route'    => '/auth',
+                		            'defaults' => array(
+                		                'action'        => 'auth'
+                		            ),
+                		        ),
+                		    ),           
             				'profil' => array(
             						'type'    => 'Literal',
             						'options' => array(
